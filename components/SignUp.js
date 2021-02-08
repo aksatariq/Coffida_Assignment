@@ -9,17 +9,36 @@ class SignUp extends Component{
     super(props);
 
     this.state = {
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
-      confirmPass: ''
     }
   } 
 
-  signUp = () => {
-    console.log(this.state);
+  signUp(){
+    return fetch("http://10.0.2.2:3333/api/1.0.0/user",
+    {
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:JSON.stringify({
+        first_name:this.state.first_name,
+        last_name:this.state.last_name,
+        email:this.state.email,
+        password:this.state.password,
+
+      })
+    })
+    .then((response) => {
+      Alert.alert("User Added!");
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   }
+  
 
   render(){
 
@@ -38,8 +57,8 @@ class SignUp extends Component{
             <Text style={styles.formLabel}>First Name:</Text>
             <TextInput
               style={styles.formInput}
-              onChangeText={(firstName) => this.setState({firstName})}
-              value={this.state.firstName}
+              onChangeText={(first_name) => this.setState({first_name})}
+              value={this.state.first_name}
             />
           </View>
 
@@ -47,8 +66,8 @@ class SignUp extends Component{
             <Text style={styles.formLabel}>Last Name:</Text>
             <TextInput
               style={styles.formInput}
-              onChangeText={(lastName) => this.setState({lastName})}
-              value={this.state.lastName}
+              onChangeText={(last_name) => this.setState({last_name})}
+              value={this.state.last_name}
             />
           </View>
 
@@ -71,7 +90,7 @@ class SignUp extends Component{
             />
           </View>
   
-          <View style={styles.formItem}>
+          {/* <View style={styles.formItem}>
             <Text style={styles.formLabel}>Confirm Password:</Text>
             <TextInput
               style={styles.formInput}
@@ -79,7 +98,7 @@ class SignUp extends Component{
               onChangeText={(confirmPass) => this.setState({confirmPass})}
               value={this.state.confirmPass}
             />
-          </View>
+          </View> */}
   
           <View style={styles.formItem}>
             <TouchableOpacity

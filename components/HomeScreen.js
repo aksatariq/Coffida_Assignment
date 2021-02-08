@@ -4,8 +4,7 @@ import { Container } from 'native-base';
 import { endAsyncEvent } from 'react-native/Libraries/Performance/Systrace';
 
 
-class LoginScreen extends Component{
-  
+class HomeScreen extends Component{
 
     render(){
       
@@ -23,7 +22,7 @@ class LoginScreen extends Component{
             <View style={styles.buttonView}>
               <TouchableOpacity
                 style={styles.greenButton}
-                onPress={() => navigation.navigate('signUp')}
+                onPress={() => navigation.navigate('signup')}
                 >
                 <Text style={styles.buttonText}>SIGN UP</Text>
               </TouchableOpacity>
@@ -92,4 +91,4 @@ buttonText2:{
 
 });
 
-  export default LoginScreen;
+  export default HomeScreen;
