@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text,Button,TextInput, Alert,Image, View, StyleSheet,ScrollView, TouchableOpacity, FlatList} from 'react-native';
+import {Text,Button,TextInput, Alert,Image, View, StyleSheet,ScrollView, TouchableOpacity, FlatList, ToastAndroid} from 'react-native';
 import { Container } from 'native-base';
 import { endAsyncEvent } from 'react-native/Libraries/Performance/Systrace';
 
@@ -17,28 +17,47 @@ class SignUp extends Component{
   } 
 
   signUp(){
+    
+    //validation here 
+
+    //send post request to api
     return fetch("http://10.0.2.2:3333/api/1.0.0/user",
     {
       method:'POST',
       headers: {'Content-Type': 'application/json'},
-      body:JSON.stringify({
-        first_name:this.state.first_name,
-        last_name:this.state.last_name,
-        email:this.state.email,
-        password:this.state.password,
-
-      })
+      body:JSON.stringify(this.state)
     })
+
     .then((response) => {
-      Alert.alert("User Added!");
+      
+      //check the response status we get back
+      if(response.status == 201) {
 
+        return response.json()
+
+      }else if(response.status ==400){
+
+        throw 'Failed Validation'
+
+      }else{
+
+        throw "Something went wrong"
+
+      }
     })
+
+    .then(async(responseJson) => {
+        console.log("User created with id: " + responseJson.id);
+        this.props.navigation.navigate("login");
+    })
+
+    //show if the validation has failed.
     .catch((error) => {
       console.error(error);
+      ToastAndroid.show(error, ToastAndroid.SHORT);
     });
 
   }
-  
 
   render(){
 
@@ -49,7 +68,7 @@ class SignUp extends Component{
         <ScrollView>
 
          <View style={styles.formItem}>
-            <Text style={styles.title}>Coffida Registration!</Text>
+            <Text style={styles.title}>Register!</Text>
           <Text style={styles.subTitle}>Create an account</Text>
           </View>
           
@@ -121,13 +140,15 @@ const styles = StyleSheet.create({
   mainBg: {
     backgroundColor:'#001624',
     flex:1,
-    flexDirection: 'row'
+    flexDirection: 'column',
+    justifyContent:'space-around'
         
   },
   title: {
     color:'white',
     fontSize:30,
-    alignSelf:'center'
+    alignSelf:'center',
+    marginTop:35
   },
   subTitle: {
     color:'grey',

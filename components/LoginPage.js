@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {Text,Button,TextInput, Alert, View, StyleSheet,ScrollView, TouchableOpacity, FlatList} from 'react-native';
-
+import {Text,Button,TextInput, Alert, View, StyleSheet,ScrollView, TouchableOpacity, FlatList, ToastAndroid} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class LoginScreen extends Component{
 
@@ -13,7 +13,7 @@ class LoginScreen extends Component{
         }
       } 
 
-    login(){
+    login = async() => {
         
         const navigation = this.props.navigation;
 
@@ -21,18 +21,34 @@ class LoginScreen extends Component{
         {
           method:'POST',
           headers: {'Content-Type': 'application/json'},
-          body:JSON.stringify({
-            email:this.state.email,
-            password:this.state.password,
-          })
+          body:JSON.stringify(this.state)
         })
         .then((response) => {
-            console.log(response.status);
-            navigation.navigate('home');
+
+            if(response.status == 200){
+                
+                return response.json();
+
+            }else if(response.status == "400"){
+                
+                throw "Invalid Email or Password!"
+
+            }else{
+
+                throw "Something went wrong"
+
+            }
     
         })
+        .then(async (responseJson) => {
+            console.log(responseJson);
+            await AsyncStorage.setItem('@session_token', responseJson.token)
+            this.props.navigation.navigate("main")
+        })
+
         .catch((error) => {
           console.error(error);
+          ToastAndroid.show(error, ToastAndroid.SHORT)
         });
     
     }
@@ -42,7 +58,7 @@ class LoginScreen extends Component{
         return(
 
             <View style = {styles.mainBg}>
-
+                <ScrollView>
                 <View style={styles.formItem}>
                     <Text style={styles.title}>Login</Text>
                     <Text style={styles.subTitle}>Enter your email and password to login</Text>
@@ -74,7 +90,7 @@ class LoginScreen extends Component{
                     <Text style={styles.formTouchText}>sign in</Text>
                     </TouchableOpacity>
                 </View>
-
+                </ScrollView>
             </View>
 
         );
@@ -94,7 +110,8 @@ mainBg: {
 title: {
     color:'white',
     fontSize:30,
-    alignSelf:'center'
+    alignSelf:'center',
+    marginTop:35
 },
 subTitle: {
     color:'grey',
@@ -115,6 +132,7 @@ formInput: {
     color:'grey',
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
+    marginTop:20
 },
 formTouch: {
     backgroundColor:'#00ffea',
