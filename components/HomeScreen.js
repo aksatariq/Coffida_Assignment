@@ -14,7 +14,7 @@ class HomeScreen extends Component{
         <View style = {styles.mainBg}>
 
           <View >
-            <Text style={styles.title}>Welcomee to Coffida</Text>
+            <Text style={styles.title}>Welcome to Coffida</Text>
           </View>
 
           <View style={styles.buttonOrder}>  

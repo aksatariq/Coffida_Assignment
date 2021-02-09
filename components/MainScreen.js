@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
-import SignUpScreen from './SignUp';
 
 class MainScreen extends Component{
 
@@ -13,51 +12,37 @@ class MainScreen extends Component{
         super(props);
     
         this.state = {
-          email: '',
-          password: '',
+          token: ''
         }
       } 
 
-    login = async() => {
-        
-        const navigation = this.props.navigation;
-
-        return fetch("http://10.0.2.2:3333/api/1.0.0/user/login",
-        {
-          method:'POST',
-          headers: {'Content-Type': 'application/json'},
-          body:JSON.stringify(this.state)
-        })
-        .then((response) => {
-
-            if(response.status == 200){
-                
-                return response.json();
-
-            }else if(response.status == "400"){
-                
-                throw "Invalid Email or Password!"
-
-            }else{
-
-                throw "Something went wrong"
-
-            }
-    
-        })
-        .then(async (responseJson) => {
-            console.log(responseJson);
-            await AsyncStorage.setItem('@session_token', responseJson.token)
-            this.props.navigation.navigate("home")
-        })
-
-        .catch((error) => {
-          console.error(error);
-          ToastAndroid.show(error, ToastAndroid.SHORT)
+    componentDidMount(){
+        this.unsubscribe = this.props.navigation.addListener('focus', () =>{
+            this.checkLoggedin();
         });
-    
+
+        this.getData();
     }
-    
+
+    componentWillUnMount(){
+        this.unsubscribe();
+    }
+
+    checkLoggedin = async() => {
+
+        const token = await AsyncStorage.getItem('@session_token');
+        this.setState({token});
+        console.log(this.state);
+
+        if(token == null) {
+            this.props.navigation.navigate('settings');
+        }
+    }
+
+    getData = () => {
+        console.log("called");
+    }
+
     render(){
         
         return(
@@ -65,10 +50,28 @@ class MainScreen extends Component{
             <View style = {styles.mainBg}>
                 <ScrollView>
                 <View style={styles.formItem}>
-                    <Text style={styles.title}>Coffida</Text>
+                    <Text style={styles.title}>Reviews</Text>
                 </View>
 
                 {/* <View style={styles.formItem}>
+                    <Text style={styles.formLabel}>First Name:</Text>
+                    <TextInput
+                    style={styles.formInput}
+                    onChangeText={(first_name) => this.setState({first_name})}
+                    value={this.state.first_name}
+                    />
+                </View>
+
+                <View style={styles.formItem}>
+                    <Text style={styles.formLabel}>Last Name:</Text>
+                    <TextInput
+                    style={styles.formInput}
+                    onChangeText={(last_name) => this.setState({last_name})}
+                    value={this.state.last_name}
+                    />
+                </View>
+
+                 <View style={styles.formItem}>
                     <Text style={styles.formLabel}>Email:</Text>
                     <TextInput
                     style={styles.formInput}
@@ -89,11 +92,20 @@ class MainScreen extends Component{
                 <View style={styles.formItem}>
                     <TouchableOpacity
                     style={styles.formTouch}
-                    onPress={() => this.login()}
+                    onPress={() => this.updateUser()}
                     >
-                    <Text style={styles.formTouchText}>sign in</Text>
-                    </TouchableOpacity> */}
-                {/* </View> */}
+                    <Text style={styles.formTouchText}>update</Text>
+                    </TouchableOpacity>
+                 </View>  */}
+
+                 {/* <View style={styles.formItem}>
+                    <TouchableOpacity
+                    style={styles.formTouch}
+                    onPress={() => this.logout()}
+                    >
+                    <Text style={styles.formTouchText}>logout</Text>
+                    </TouchableOpacity>
+                 </View>  */}
                 </ScrollView>
             </View>
 
