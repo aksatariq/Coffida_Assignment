@@ -101,6 +101,7 @@
     <orderEntry type="library" name="Gradle: org.webkit:android-jsc:r245459@aar" level="project" />
     <orderEntry type="module" module-name="AwesomeProject.react-native-async-storage_async-storage" />
     <orderEntry type="module" module-name="AwesomeProject.react-native-community_masked-view" />
+    <orderEntry type="module" module-name="AwesomeProject.react-native-camera" />
     <orderEntry type="module" module-name="AwesomeProject.react-native-gesture-handler" />
     <orderEntry type="module" module-name="AwesomeProject.react-native-reanimated" />
     <orderEntry type="module" module-name="AwesomeProject.react-native-safe-area-context" />

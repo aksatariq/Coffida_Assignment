@@ -11,7 +11,7 @@ import {
   ToastAndroid, ActivityIndicator, FlatList, ScrollView, Button,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RNCamera } from 'react-native-camera';
+// import { RNCamera } from 'react-native-camera';
 
 const styles = StyleSheet.create({
 
@@ -336,19 +336,19 @@ class LocationDetailsScreen extends Component {
         });
     }
 
-    takePicture = async () => {
-      if (this.camera) {
-        const options = { quality: 0.5, base64: true };
-        const data = await this.camera.takePictureAsync(options);
-        console.log(data.uri);
-      }
-    }
+    // takePicture = async () => {
+    //   if (this.camera) {
+    //     const options = { quality: 0.5, base64: true };
+    //     const data = await this.camera.takePictureAsync(options);
+    //     console.log(data.uri);
+    //   }
+    // }
 
     render() {
       if (this.state.isLoading) {
         return (
           <View style={styles.mainBg}>
-            <View>
+            {/* <View>
               <RNCamera
                 ref={(ref) => {
                   this.camera = ref;
@@ -359,7 +359,7 @@ class LocationDetailsScreen extends Component {
                 }}
               />
               <Button title="Take photo" onPress={() => { this.takePicture(); }} />
-            </View>
+            </View> */}
             <ScrollView>
               <TouchableOpacity onPress={() => this.addToFavourite()}>
                 <Text style={styles.formTouchText}>Add to favourite</Text>

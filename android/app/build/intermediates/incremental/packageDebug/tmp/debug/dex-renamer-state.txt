@@ -1,4 +1,4 @@
-#Mon Feb 15 03:19:58 GMT 2021
-base.0=/Users/aksatariq/Coffida_Assignment/Coffida_Assignment/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+#Mon Feb 15 22:52:50 GMT 2021
+base.0=/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
