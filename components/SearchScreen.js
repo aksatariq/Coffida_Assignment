@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-else-return */
 /* eslint-disable react/no-unused-state */
@@ -105,8 +108,12 @@ class SearchScreen extends Component {
       });
   };
 
-  LoadLocationDetails() {
-    console.log("clicked");
+  locationDetails({ item }) {
+    console.log('clicked');
+    this.props.navigation.navigate('locationDetails',
+      {
+        locationId: item.location_id,
+      });
   }
 
   // eslint-disable-next-line consistent-return
@@ -168,8 +175,9 @@ class SearchScreen extends Component {
           <View>
             <FlatList
               data={this.state.locationData}
+              keyExtractor={(item, index) => item.location_id.toString()}
               renderItem={({ item }) => (
-                <TouchableWithoutFeedback onPress={this.LoadLocationDetails()}>
+                <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
                   <View>
                     <Text style={styles.formText}>{item.location_name}</Text>
                     <Text style={styles.formText}>{item.location_town}</Text>
@@ -180,7 +188,6 @@ class SearchScreen extends Component {
                   </View>
                 </TouchableWithoutFeedback>
               )}
-              keyExtractor={(item, index) => item.location_id.toString()}
             />
           </View>
         </View>

@@ -13,6 +13,7 @@ import LoginScreen from './components/LoginPage';
 import MainScreen from './components/MainScreen';
 import SettingsScreen from './components/SettingsScreen';
 import SearchScreen from './components/SearchScreen';
+import LocationScreen from './components/LocationDetailsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -111,6 +112,18 @@ function App() {
           }}
         />
         <Stack.Screen name="main" component={HomeTabs} />
+        <Stack.Screen
+          name="locationDetails"
+          component={LocationScreen}
+          options={{
+            title: '',
+            headerStyle: {
+              backgroundColor: '#001624',
+            },
+            headerTintColor: '#00ffea',
+            headerShown: true,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
