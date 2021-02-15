@@ -11,7 +11,6 @@ import {
   ToastAndroid, ActivityIndicator, FlatList, ScrollView, Button,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { RNCamera } from 'react-native-camera';
 
 const styles = StyleSheet.create({
 
@@ -336,33 +335,13 @@ class LocationDetailsScreen extends Component {
         });
     }
 
-    // takePicture = async () => {
-    //   if (this.camera) {
-    //     const options = { quality: 0.5, base64: true };
-    //     const data = await this.camera.takePictureAsync(options);
-    //     console.log(data.uri);
-    //   }
-    // }
-
     render() {
       if (this.state.isLoading) {
         return (
           <View style={styles.mainBg}>
-            {/* <View>
-              <RNCamera
-                ref={(ref) => {
-                  this.camera = ref;
-                }}
-                style={{
-                  flex: 1,
-                  width: '100%',
-                }}
-              />
-              <Button title="Take photo" onPress={() => { this.takePicture(); }} />
-            </View> */}
             <ScrollView>
               <TouchableOpacity onPress={() => this.addToFavourite()}>
-                <Text style={styles.formTouchText}>Add to favourite</Text>
+                <Text style={styles.formTouchText}>Addd to favourite</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.removeFromFavourite()}>
                 <Text style={styles.formTouchText}>Remove from favourite</Text>
@@ -458,3 +437,31 @@ class LocationDetailsScreen extends Component {
 }
 
 export default LocationDetailsScreen;
+
+{/* <View>
+          <RNCamera
+            ref={(ref) => {
+              this.camera = ref;
+            }}
+            captureAudio={false}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+            style={{
+              flex: 1,
+            }}
+          />
+          <Button title="Take photo" onPress={() => { this.takePicture(); }} />
+        </View> */}
+
+        // takePicture = async () => {
+        //   console.log("here");
+        //   if (this.camera) {
+        //     const options = { quality: 0.5, base64: true };
+        //     const data = await this.camera.takePictureAsync(options);
+        //     console.log(data.uri);
+        //   }
+        // }
