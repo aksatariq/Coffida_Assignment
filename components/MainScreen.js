@@ -1,59 +1,53 @@
+import React, { Component } from 'react';
+import {
+  Text, View, StyleSheet, ScrollView,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import React, {Component} from 'react';
-import {Text,Button,TextInput, Alert, View, StyleSheet,ScrollView, TouchableOpacity, FlatList, ToastAndroid} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
-import HomeScreen from './HomeScreen';
+class MainScreen extends Component {
+  constructor(props) {
+    super(props);
 
-class MainScreen extends Component{
+    this.state = {
+      token: '',
+    };
+  }
 
-    constructor(props){
-        super(props);
-    
-        this.state = {
-          token: ''
-        }
-      } 
+  componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () =>{
+      this.checkLoggedin();
+    });
 
-    componentDidMount(){
-        this.unsubscribe = this.props.navigation.addListener('focus', () =>{
-            this.checkLoggedin();
-        });
+    this.getData();
+  }
 
-        this.getData();
-    }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
-    componentWillUnMount(){
-        this.unsubscribe();
-    }
+    checkLoggedin = async () => {
+      const token = await AsyncStorage.getItem('@session_token');
+      this.setState({ token });
 
-    checkLoggedin = async() => {
-
-        const token = await AsyncStorage.getItem('@session_token');
-        this.setState({token});
-        console.log(this.state);
-
-        if(token == null) {
-            this.props.navigation.navigate('settings');
-        }
+      if (token == null) {
+        this.props.navigation.navigate('settings');
+      }
     }
 
     getData = () => {
-        console.log("called");
+      console.log("called");
     }
 
-    render(){
-        
-        return(
+    render() {
+      return (
 
-            <View style = {styles.mainBg}>
-                <ScrollView>
-                <View style={styles.formItem}>
-                    <Text style={styles.title}>Reviews</Text>
-                </View>
+        <View style={styles.mainBg}>
+          <ScrollView>
+            <View style={styles.formItem}>
+              <Text style={styles.title}>Reviews</Text>
+            </View>
 
-                {/* <View style={styles.formItem}>
+            {/* <View style={styles.formItem}>
                     <Text style={styles.formLabel}>First Name:</Text>
                     <TextInput
                     style={styles.formInput}
@@ -87,7 +81,7 @@ class MainScreen extends Component{
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
                     />
-                </View> 
+                </View>
 
                 <View style={styles.formItem}>
                     <TouchableOpacity
@@ -98,7 +92,7 @@ class MainScreen extends Component{
                     </TouchableOpacity>
                  </View>  */}
 
-                 {/* <View style={styles.formItem}>
+            {/* <View style={styles.formItem}>
                     <TouchableOpacity
                     style={styles.formTouch}
                     onPress={() => this.logout()}
@@ -106,64 +100,61 @@ class MainScreen extends Component{
                     <Text style={styles.formTouchText}>logout</Text>
                     </TouchableOpacity>
                  </View>  */}
-                </ScrollView>
-            </View>
+          </ScrollView>
+        </View>
 
-        );
-
+      );
     }
-
 }
 
 const styles = StyleSheet.create({
 
-mainBg: {
-    backgroundColor:'#001624',
-    flex:1,
+  mainBg: {
+    backgroundColor: '#001624',
+    flex: 1,
     flexDirection: 'column',
-    justifyContent:'space-around'
-},  
-title: {
-    color:'white',
-    fontSize:30,
-    alignSelf:'center',
-    marginTop:35
-},
-subTitle: {
-    color:'grey',
-    padding:10,
-    fontSize:15,
-    alignSelf:'center'
+    justifyContent: 'space-around',
+  },
+  title: {
+    color: 'white',
+    fontSize: 30,
+    alignSelf: 'center',
+    marginTop: 35,
+  },
+  subTitle: {
+    color: 'grey',
+    padding: 10,
+    fontSize: 15,
+    alignSelf: 'center',
 
-},
-formItem: {
-    padding:20
-},
-formLabel: {
-    fontSize:15,
-    color:'grey'
-},
-formInput: {
-    borderRadius:3,
-    color:'grey',
+  },
+  formItem: {
+    padding: 20,
+  },
+  formLabel: {
+    fontSize: 15,
+    color: 'grey',
+  },
+  formInput: {
+    borderRadius: 3,
+    color: 'grey',
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
-    marginTop:20
-},
-formTouch: {
-    backgroundColor:'#00ffea',
-    borderRadius:3,
-    padding:12,
-    width:290,
-    alignSelf:'center',
-},
-formTouchText: {
-    fontSize:18,
-    fontWeight:'bold',
-    color:'white',
-    alignSelf:'center'
-    
-}
+    marginTop: 20,
+  },
+  formTouch: {
+    backgroundColor: '#00ffea',
+    borderRadius: 3,
+    padding: 12,
+    width: 290,
+    alignSelf: 'center',
+  },
+  formTouchText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    alignSelf: 'center',
+  },
 
 });
 
