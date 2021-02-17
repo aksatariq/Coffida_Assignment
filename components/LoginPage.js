@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Text,Button,TextInput, Alert, View, StyleSheet,ScrollView, TouchableOpacity, FlatList, ToastAndroid } from 'react-native';
+import {
+  Text, Button, TextInput, Alert, View, StyleSheet, ScrollView, TouchableOpacity, FlatList, ToastAndroid,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LoginScreen extends Component {
@@ -18,20 +20,20 @@ class LoginScreen extends Component {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.state)
+          body: JSON.stringify(this.state),
         })
         .then((response) => {
           if (response.status == 200) {
             return response.json();
-          } else if (response.status == '400') {
+          } if (response.status == '400') {
             throw 'Invalid Email or Password!';
-          }else {
+          } else {
             throw 'Something went wrong';
           }
         })
         .then(async (responseJson) => {
           console.log(responseJson);
-          var id = responseJson.id;
+          const { id } = responseJson;
           await AsyncStorage.setItem('@session_token', responseJson.token);
           await AsyncStorage.setItem('@user_id', id.toString());
           this.props.navigation.navigate('main');
@@ -46,42 +48,42 @@ class LoginScreen extends Component {
     render() {
       return (
 
-            <View style = {styles.mainBg}>
-                <ScrollView>
-                <View style={styles.formItem}>
-                    <Text style={styles.title}>Login</Text>
-                    <Text style={styles.subTitle}>Enter your email and password to login</Text>
-                </View>
-
-                <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>Email:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
-                    />
-                </View>
-
-                <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>Password:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    secureTextEntry
-                    onChangeText={(password) => this.setState({ password })}
-                    value={this.state.password}
-                    />
-                </View>
-
-                <View style={styles.formItem}>
-                    <TouchableOpacity
-                    style={styles.formTouch}
-                    onPress={() => this.login()}
-                    >
-                    <Text style={styles.formTouchText}>sign in</Text>
-                    </TouchableOpacity>
-                </View>
-                </ScrollView>
+        <View style={styles.mainBg}>
+          <ScrollView>
+            <View style={styles.formItem}>
+              <Text style={styles.title}>Login</Text>
+              <Text style={styles.subTitle}>Enter your email and password to login</Text>
             </View>
+
+            <View style={styles.formItem}>
+              <Text style={styles.formLabel}>Email:</Text>
+              <TextInput
+                style={styles.formInput}
+                onChangeText={(email) => this.setState({ email })}
+                value={this.state.email}
+              />
+            </View>
+
+            <View style={styles.formItem}>
+              <Text style={styles.formLabel}>Password:</Text>
+              <TextInput
+                style={styles.formInput}
+                secureTextEntry
+                onChangeText={(password) => this.setState({ password })}
+                value={this.state.password}
+              />
+            </View>
+
+            <View style={styles.formItem}>
+              <TouchableOpacity
+                style={styles.formTouch}
+                onPress={() => this.login()}
+              >
+                <Text style={styles.formTouchText}>sign in</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
 
       );
     }
@@ -93,34 +95,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#001624',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   title: {
     color: 'white',
     fontSize: 30,
     alignSelf: 'center',
-    marginTop: 35
+    marginTop: 35,
   },
   subTitle: {
     color: 'grey',
     padding: 10,
     fontSize: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
 
   },
   formItem: {
-    padding: 20
+    padding: 20,
   },
   formLabel: {
     fontSize: 15,
-    color: 'grey'
+    color: 'grey',
   },
   formInput: {
     borderRadius: 3,
     color: 'grey',
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
-    marginTop: 20
+    marginTop: 20,
   },
   formTouch: {
     backgroundColor: '#00ffea',
@@ -133,9 +135,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-    alignSelf: 'center'
+    alignSelf: 'center',
 
-  }
+  },
 
 });
 

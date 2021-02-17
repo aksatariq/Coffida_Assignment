@@ -11,6 +11,12 @@ import {
   ToastAndroid, ActivityIndicator, FlatList, ScrollView, Button,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  Container, Header, Content, Tab, Tabs,
+} from 'native-base';
+
+import Tab2 from './AddReview';
+import Tab1 from './LocationReviews';
 
 const styles = StyleSheet.create({
 
@@ -105,6 +111,7 @@ class LocationDetailsScreen extends Component {
       console.log('item received');
       const idCheck = this.props.route.params.locationId;
       this.setState({ location_id: idCheck });
+      await AsyncStorage.setItem('@location_id', idCheck.toString());
 
       this.getData();
     }
@@ -335,11 +342,30 @@ class LocationDetailsScreen extends Component {
         });
     }
 
+    takePicture = async () => {
+      console.log('here');
+      if (this.camera) {
+        const options = { quality: 0.5, base64: true };
+        const data = await this.camera.takePictureAsync(options);
+        console.log(data.uri);
+      }
+    }
+
     render() {
-      if (this.state.isLoading) {
-        return (
-          <View style={styles.mainBg}>
-            <ScrollView>
+      return (
+        <View style={styles.mainBg}>
+          <Container style={styles.mainBg}>
+            <Header style={styles.mainBg} hasTabs />
+            <Tabs tabBarUnderlineStyle={{ borderWidth: 1, backgroundColor: '#013454' }}>
+              <Tab tabStyle={styles.mainBg} activeTabStyle={styles.mainBg} heading="Location Details">
+                <Tab1 />
+              </Tab>
+              <Tab tabStyle={styles.mainBg} activeTabStyle={styles.mainBg} heading="Add Review">
+                <Tab2 />
+              </Tab>
+            </Tabs>
+          </Container>
+          {/* <ScrollView>
               <TouchableOpacity onPress={() => this.addToFavourite()}>
                 <Text style={styles.formTouchText}>Addd to favourite</Text>
               </TouchableOpacity>
@@ -356,53 +382,53 @@ class LocationDetailsScreen extends Component {
               </View>
               <View style={styles.formItem}>
                 <Text style={styles.formLabel}>Price Rating:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(price_rating) => this.setState({ price_rating })}
-                  value={this.state.price_rating}
-                />
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Quality Rating:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(quality_rating) => this.setState({ quality_rating })}
-                  value={this.state.last_name}
-                />
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Cleanliness Rating:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(cleanliness_rating) => this.setState({ cleanliness_rating })}
-                  value={this.state.cleanliness_rating}
-                />
-              </View>
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Review Body:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(review_body) => this.setState({ review_body })}
-                  value={this.state.review_body}
-                />
-              </View>
-              <TouchableOpacity onPress={() => this.addReview()}>
-                <Text style={styles.formTouchText}>Add a review</Text>
-              </TouchableOpacity>
-              <Text style={styles.formTouchText}>{this.state.locationData.location_name}</Text>
-              <Text style={styles.formTouchText}>{this.state.locationData.location_town}</Text>
-              <View>
-                <FlatList
-                  data={this.state.locationReviews}
-                  keyExtractor={(item) => item.review_id.toString()}
-                  renderItem={({ item, index }) => (
-                    <View>
-                      <Text style={styles.formTouchText}>Review number: {index}</Text>
+                <TextInput */}
+          {/* //     style={styles.formInput}
+              //     onChangeText={(price_rating) => this.setState({ price_rating })}
+              //     value={this.state.price_rating}
+              //   />
+              // </View>
+              // <View style={styles.formItem}> */}
+          {/* //   <Text style={styles.formLabel}>Quality Rating:</Text>
+              //   <TextInput
+              //     style={styles.formInput}
+              //     onChangeText={(quality_rating) => this.setState({ quality_rating })}
+              //     value={this.state.last_name}
+              //   />
+              // </View>
+              // <View style={styles.formItem}>
+              //   <Text style={styles.formLabel}>Cleanliness Rating:</Text>
+              //   <TextInput
+              //     style={styles.formInput}
+              //     onChangeText={(cleanliness_rating) => this.setState({ cleanliness_rating })}
+              //     value={this.state.cleanliness_rating}
+              //   />
+              // </View>
+              // <View style={styles.formItem}>
+              //   <Text style={styles.formLabel}>Review Body:</Text>
+              //   <TextInput
+              //     style={styles.formInput}
+              //     onChangeText={(review_body) => this.setState({ review_body })}
+              //     value={this.state.review_body}
+              //   />
+              // </View>
+              // <TouchableOpacity onPress={() => this.addReview()}>
+              //   <Text style={styles.formTouchText}>Add a review</Text>
+              // </TouchableOpacity>
+              // <Text style={styles.formTouchText}>{this.state.locationData.location_name}</Text>
+              // <Text style={styles.formTouchText}>{this.state.locationData.location_town}</Text>
+              // <View>
+              //   <FlatList
+              //     data={this.state.locationReviews}
+              //     keyExtractor={(item) => item.review_id.toString()}
+              //     renderItem={({ item, index }) => (
+              //       <View>
+              //         <Text style={styles.formTouchText}>Review number: {index}</Text>
                       {/* <TextInput style={styles.formTouchText}>{item.overall_rating}</TextInput>
                       <TextInput style={styles.formTouchText}>{item.quality_rating}</TextInput>
                       <TextInput style={styles.formTouchText}>{item.price_rating}</TextInput>
                       <TextInput style={styles.formTouchText}>{item.clenliness_rating}</TextInput> */}
-                      <TextInput style={styles.formTouchText}>{item.review_body}</TextInput>
+          {/* <TextInput style={styles.formTouchText}>{item.review_body}</TextInput>
                       <Text style={styles.formTouchText}>{item.likes} likes</Text>
                       <TouchableWithoutFeedback onPress={() => this.deleteReview({ item })}>
                         <Text style={styles.formTouchText}>DELETE</Text>
@@ -420,25 +446,14 @@ class LocationDetailsScreen extends Component {
                   )}
                 />
               </View>
-            </ScrollView>
-          </View>
-        );
-      } else {
-        return (
-          <View style={styles.mainBg}>
-            <ActivityIndicator
-              size="large"
-              color="#00ff00"
-            />
-          </View>
-        );
-      }
+            </ScrollView> */}
+        </View>
+      );
     }
 }
-
 export default LocationDetailsScreen;
 
-{/* <View>
+{ /* <View>
           <RNCamera
             ref={(ref) => {
               this.camera = ref;
@@ -455,13 +470,4 @@ export default LocationDetailsScreen;
             }}
           />
           <Button title="Take photo" onPress={() => { this.takePicture(); }} />
-        </View> */}
-
-        // takePicture = async () => {
-        //   console.log("here");
-        //   if (this.camera) {
-        //     const options = { quality: 0.5, base64: true };
-        //     const data = await this.camera.takePictureAsync(options);
-        //     console.log(data.uri);
-        //   }
-        // }
+        </View> */ }

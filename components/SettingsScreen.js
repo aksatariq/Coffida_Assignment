@@ -115,28 +115,34 @@ class SettingsScreen extends Component {
 
     async updateUser() {
       const toSend = {};
-      const sendBool = false;
+      // eslint-disable-next-line prefer-const
+      let sendBool = true;
 
       if (this.state.email != this.state.orig_email) {
         toSend.email = this.state.email;
         // eslint-disable-next-line no-unused-expressions
-        sendBool == true;
+        sendBool === true;
+        console.log('here');
       }
 
       if (this.state.first_name != this.state.orig_first_name) {
         toSend.first_name = this.state.first_name;
-        sendBool == true;
+        sendBool === true;
+        console.log('here');
       }
 
       if (this.state.last_name != this.state.orig_last_name) {
         toSend.last_name = this.state.last_name;
-        sendBool == true;
+        sendBool === true;
       }
 
       if (this.state.password == this.state.confirm_password && this.state.password != '') {
         toSend.password = this.state.password;
-        sendBool == true;
+        sendBool === true;
       }
+
+      console.log(toSend);
+      console.log(sendBool);
 
       // check to see if any changes made
       if (sendBool == true) {

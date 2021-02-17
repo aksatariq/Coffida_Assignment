@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
@@ -10,12 +11,15 @@
 /* eslint-disable no-use-before-define */
 import React, { Component } from 'react';
 import {
-  View, StyleSheet, FlatList, Text, Image, ToastAndroid, TouchableWithoutFeedback,
+  View, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity,
+  Text, Image, SafeAreaView, ActivityIndicator, ToastAndroid,
 } from 'react-native';
 // import PropTypes from 'prop-types';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, List, ListItem } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
+
+const image = { uri: 'https://reactjs.org/logo-og.png' };
 
 // eslint-disable-next-line react/prefer-stateless-function
 class SearchScreen extends Component {
@@ -41,6 +45,8 @@ class SearchScreen extends Component {
       location_photopath: '',
       location_latitude: '',
       location_longitude: '',
+      limit: 20,
+      offset: 0,
 
     };
   }
@@ -62,6 +68,7 @@ class SearchScreen extends Component {
       if (tokenId != null) {
         // store the token
         this.setState({ token: tokenId });
+        this.setState({ limit: 20 });
 
         // call to display all locations
         this.updateSearch('');
@@ -81,7 +88,7 @@ class SearchScreen extends Component {
     console.log('searching....');
     console.log(text);
 
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/find/?q=${this.state.searchValue}&clenliness_rating=${this.state.cleanliness_rating}&price_rating=${this.state.price_rating}&quality_rating=${this.state.quality_rating}&overall_rating=${this.state.overall_rating}`,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/find/?q=${this.state.searchValue}&clenliness_rating=${this.state.cleanliness_rating}&price_rating=${this.state.price_rating}&quality_rating=${this.state.quality_rating}&overall_rating=${this.state.overall_rating}&limit=${this.state.limit}`,
       {
         headers: { 'X-Authorization': this.state.token },
       })
@@ -108,91 +115,112 @@ class SearchScreen extends Component {
       });
   };
 
-  locationDetails({ item }) {
-    console.log('clicked');
-    this.props.navigation.navigate('locationDetails',
-      {
-        locationId: item.location_id,
-      });
+  showMoreData = () => {
+    const currentLimit = this.state.limit;
+    const currentOffset = this.state.offset;
+    this.state.limit = id + 20;
+    this.state.offset = currentOffset + 20;
   }
+
+  locationDetails = async ({ item }) => {
+    console.log('clicked');
+    await AsyncStorage.setItem('@location_id', item.location_id.toString());
+    this.props.navigation.navigate('locationReviews');
+  }
+
+  renderHeader = () => (
+    <View>
+      <SearchBar
+        round
+        inputContainerStyle={{ backgroundColor: '#001624' }}
+        containerStyle={{ backgroundColor: '#001624' }}
+        placeholderTextColor="grey"
+        searchIcon={{ size: 24 }}
+        onChangeText={(searchValue) => this.setState({
+          searchValue,
+        }, this.updateSearch)}
+        onClear={(text) => this.updateSearch('')}
+        placeholder="Search for a location..."
+        value={this.state.searchValue}
+      />
+      <View style={styles.sortView}>
+        <Text style={styles.sortFilters}> Sort:</Text>
+        <TextInput
+          style={styles.filterText}
+          placeholder="Overall"
+          placeholderTextColor="white"
+              // eslint-disable-next-line camelcase
+          onChangeText={(overall_rating) => this.setState({
+            overall_rating,
+          }, this.updateSearch)}
+        />
+        <TextInput
+          style={styles.filterText}
+          placeholder="Price"
+          placeholderTextColor="white"
+          onChangeText={(price_rating) => this.setState({
+            price_rating,
+          }, this.updateSearch)}
+        />
+        <TextInput
+          style={styles.filterText}
+          placeholder="Hygeine"
+          placeholderTextColor="white"
+          onChangeText={(cleanliness_rating) => this.setState({
+            cleanliness_rating,
+          }, this.updateSearch)}
+        />
+        <TextInput
+          style={styles.filterText}
+          placeholder="Quality"
+          placeholderTextColor="white"
+          onChangeText={(quality_rating) => this.setState({
+            quality_rating,
+          }, this.updateSearch)}
+        />
+      </View>
+    </View>
+  )
+
+  renderFooter = () => (
+    <View>
+      <TouchableOpacity
+        style={styles.buttonStyle}
+        onPress={() => this.showMoreData()}
+      >
+        <Text style={styles.buttonText}>SHOW MORE</Text>
+      </TouchableOpacity>
+    </View>
+  )
 
   // eslint-disable-next-line consistent-return
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.mainBg}>
-          <View>
-            <SearchBar
-              round
-              inputStyle={{ backgroundColor: '#001624' }}
-              containerStyle={{ backgroundColor: '#001624' }}
-              placeholderTextColor="grey"
-              searchIcon={{ size: 24 }}
-              onChangeText={(searchValue) => this.setState({
-                searchValue,
-              }, this.updateSearch)}
-              onClear={(text) => this.updateSearch('')}
-              placeholder="Search for a location..."
-              value={this.state.searchValue}
-            />
-          </View>
-          <View style={styles.sortView}>
-            <Text style={styles.sortFilters}> Sort:</Text>
-            <TextInput
-              style={styles.filterText}
-              placeholder="Overall"
-              placeholderTextColor="white"
-              // eslint-disable-next-line camelcase
-              onChangeText={(overall_rating) => this.setState({
-                overall_rating,
-              }, this.updateSearch)}
-            />
-            <TextInput
-              style={styles.filterText}
-              placeholder="Price"
-              placeholderTextColor="white"
-              onChangeText={(price_rating) => this.setState({
-                price_rating,
-              }, this.updateSearch)}
-            />
-            <TextInput
-              style={styles.filterText}
-              placeholder="Cleanliness"
-              placeholderTextColor="white"
-              onChangeText={(cleanliness_rating) => this.setState({
-                cleanliness_rating,
-              }, this.updateSearch)}
-            />
-            <TextInput
-              style={styles.filterText}
-              placeholder="Quality"
-              placeholderTextColor="white"
-              onChangeText={(quality_rating) => this.setState({
-                quality_rating,
-              }, this.updateSearch)}
-            />
-          </View>
-          <View>
-            <FlatList
-              data={this.state.locationData}
-              keyExtractor={(item, index) => item.location_id.toString()}
-              renderItem={({ item }) => (
-                <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
-                  <View>
-                    <Text style={styles.formText}>{item.location_name}</Text>
-                    <Text style={styles.formText}>{item.location_town}</Text>
-                    <Image
-                      style={{ width: 200, height: 200 }}
-                      source={{ uri: item.location_photopath }}
-                    />
-                  </View>
-                </TouchableWithoutFeedback>
-              )}
-            />
-          </View>
-        </View>
-      );
-    }
+    return (
+      <SafeAreaView style={styles.mainBg}>
+        <FlatList
+          data={this.state.locationData}
+          keyExtractor={(item, index) => item.location_id.toString()}
+          renderItem={({ item }) => (
+            <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
+              <View style={styles.row}>
+                <Text style={styles.formText}>{item.location_name}</Text>
+                <Text style={styles.formText}>{item.location_town}</Text>
+                <Image
+                  style={{
+                    width: 107,
+                    height: 165,
+                    padding: 100,
+                  }}
+                  source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          ListFooterComponent={this.renderFooter()}
+          ListHeaderComponent={this.renderHeader()}
+        />
+      </SafeAreaView>
+    );
   }
 }
 
@@ -208,6 +236,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#001624',
     flex: 1,
   },
+  flatListStyle: {
+    height: 80,
+    paddingTop: 20,
+  },
+  buttonStyle: {
+    borderRadius: 3,
+    backgroundColor: '#00ffea',
+    width: 100,
+    color: 'white',
+
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    height: 30,
+    paddingTop: 5,
+  },
   sortFilters: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -219,24 +265,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#001624',
   },
   formText: {
-    fontSize: 15,
+    fontSize: 16,
     color: 'white',
+    flexShrink: 1,
+    lineHeight: 27,
   },
   filterText: {
-    fontSize: 14,
+    fontSize: 13,
     color: 'white',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#00ffea',
-    width: 83,
-    height: 27,
-    marginLeft: 7,
+    width: 78,
+    height: 25,
+    marginLeft: 8,
     padding: 2,
     textAlign: 'center',
   },
   sortView: {
     flexDirection: 'row',
     marginTop: 10,
+  },
+  row: {
+
+    flex: 1,
+    paddingVertical: 25,
+    paddingHorizontal: 15,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+
   },
 
 });
