@@ -12,6 +12,8 @@ target 'AwesomeProject' do
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'AwesomeProjectTests' do
     inherit! :complete
     # Pods for testing

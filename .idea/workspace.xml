@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f6b0a23-0f30-4c06-99f2-b72b43d81c4e" name="Default Changelist" comment="" />
+    <list default="true" id="8f6b0a23-0f30-4c06-99f2-b72b43d81c4e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.2/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.2/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeExtDexDebug/out/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeExtDexDebug/out/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_0.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_0.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_1.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_2.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_3.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_3.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_4.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_4.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_5.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_5.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_6.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_6.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_7.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_7.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_8.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeLibDexDebug/out/classes_8.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/out/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/out/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build/outputs/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/HomeScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/HomeScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/LocationReviews.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/LocationReviews.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/MainScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/MainScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SearchScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/SearchScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/@react-native-async-storage/async-storage/android/build/.transforms/07d492f92a88df504dbe13963ab13f90/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/@react-native-async-storage/async-storage/android/build/.transforms/07d492f92a88df504dbe13963ab13f90/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-camera/android/build/.transforms/86102e4316dc42bdd41bc95faf935430/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-camera/android/build/.transforms/86102e4316dc42bdd41bc95faf935430/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-gesture-handler/android/build/.transforms/b3a02fe8ff7a5218e1fd6f2981c077e6/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-gesture-handler/android/build/.transforms/b3a02fe8ff7a5218e1fd6f2981c077e6/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-permissions/android/build/.transforms/e9689847809d1f3569dd0e31f059443e/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-permissions/android/build/.transforms/e9689847809d1f3569dd0e31f059443e/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-reanimated/android/build/.transforms/cf23d7202e362c08e2a203e9c6469e9d/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-reanimated/android/build/.transforms/cf23d7202e362c08e2a203e9c6469e9d/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-safe-area-context/android/build/.transforms/8e71c5c444678e39c529252395cb1789/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-safe-area-context/android/build/.transforms/8e71c5c444678e39c529252395cb1789/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/react-native-screens/android/build/.transforms/ce45360babcab3d8f36ac4b6234a6d92/classes/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/react-native-screens/android/build/.transforms/ce45360babcab3d8f36ac4b6234a6d92/classes/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,12 +75,13 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="140" y="138" width="1200" height="537" key="AVDManager" timestamp="1613210385296">
-      <screen x="0" y="25" width="1440" height="804" />
+    <state x="140" y="139" width="1200" height="544" key="AVDManager" timestamp="1613630952490">
+      <screen x="0" y="25" width="1440" height="817" />
     </state>
     <state x="140" y="138" width="1200" height="537" key="AVDManager/0.25.1440.804@0.25.1440.804" timestamp="1613210385296" />
     <state x="140" y="140" width="1200" height="547" key="AVDManager/0.25.1440.809@0.25.1440.809" timestamp="1612862693439" />
     <state x="140" y="140" width="1200" height="546" key="AVDManager/0.25.1440.815@0.25.1440.815" timestamp="1612872302114" />
+    <state x="140" y="139" width="1200" height="544" key="AVDManager/0.25.1440.817@0.25.1440.817" timestamp="1613630952490" />
     <state x="140" y="143" width="1200" height="559" key="AVDManager/0.25.1440.818@0.25.1440.818" timestamp="1612819495824" />
     <state x="328" y="169" key="IDE.errors.dialog" timestamp="1612871088913">
       <screen x="0" y="25" width="1440" height="814" />

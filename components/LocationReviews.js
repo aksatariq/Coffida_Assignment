@@ -5,7 +5,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-else-return */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   Text, View, StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback,
   ToastAndroid, ActivityIndicator, FlatList, SafeAreaView, Button,
@@ -79,6 +79,32 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
 
+  likeIcon: {
+
+    color: '#00ffea',
+    borderRadius: 20,
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    padding: 10,
+    borderColor: '#00ffea',
+    overflow: 'hidden',
+    marginTop: 15,
+  },
+
+  favouriteIcon: {
+
+    color: '#00ffea',
+    borderRadius: 20,
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    padding: 9,
+    borderColor: '#00ffea',
+    overflow: 'hidden',
+    marginTop: 20,
+  },
+
 });
 
 class LocationDetailsScreen extends Component {
@@ -101,6 +127,8 @@ class LocationDetailsScreen extends Component {
       orig_quality_rating: '',
       orig_clenliness_rating: '',
       orig_review_body: '',
+      showFavourite: true,
+      showLike: true,
 
     };
   }
@@ -306,45 +334,26 @@ class LocationDetailsScreen extends Component {
 
     renderHeader = () => (
       <View style={{ flex: 1, flexDirection: 'row-reverse', margin: 10 }}>
-        <TouchableOpacity onPress={() => this.addToFavourite()}>
+        {this.state.showFavourite && (
+        <TouchableOpacity hide={this.state.hidden} onPress={() => this.addToFavourite()}>
           <MaterialCommunityIcons
             name="heart"
-            style={{
-              color: '#00ffea',
-              borderRadius: 20,
-              borderWidth: 2,
-              width: 40,
-              height: 40,
-              padding: 9,
-              borderColor: '#00ffea',
-              overflow: 'hidden',
-              marginRight: 10,
-              marginLeft: 40,
-              marginTop: 20,
-
-            }}
+            style={styles.favouriteIcon}
             color="#00ffea"
             size={23}
           />
         </TouchableOpacity>
+        )}
+        {!this.state.showFavourite && (
         <TouchableOpacity onPress={() => this.removeFromFavourite()}>
           <MaterialCommunityIcons
             name="heart-outline"
-            style={{
-              color: '#00ffea',
-              borderRadius: 20,
-              borderWidth: 2,
-              width: 40,
-              height: 40,
-              padding: 9,
-              borderColor: '#00ffea',
-              overflow: 'hidden',
-              marginTop: 20,
-            }}
+            style={styles.favouriteIcon}
             color="#00ffea"
             size={23}
           />
         </TouchableOpacity>
+        )}
       </View>
     )
 
@@ -416,50 +425,27 @@ class LocationDetailsScreen extends Component {
                   <Text style={styles.formTouchText}>Hygeine: {item.clenliness_rating}</Text>
                   <Text style={styles.formTouchText}>{item.likes} likes</Text>
                   <Text style={styles.formTouchText}>{item.review_body}</Text>
-                  {/* <TouchableWithoutFeedback onPress={() => this.deleteReview({ item })}>
-                    <Text style={styles.formTouchText}>DELETE</Text>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={() => this.updateReview({ item })}>
-                    <Text style={styles.formTouchText}>UPDATE</Text>
-                  </TouchableWithoutFeedback> */}
                   <View style={{ flex: 1, flexDirection: 'row' }}>
+                    {this.state.showLike && (
                     <TouchableWithoutFeedback onPress={() => this.likeReview({ item })}>
                       <MaterialCommunityIcons
                         name="thumb-up"
-                        style={{
-                          color: '#00ffea',
-                          borderRadius: 20,
-                          borderWidth: 2,
-                          width: 40,
-                          height: 40,
-                          padding: 10,
-                          borderColor: '#00ffea',
-                          overflow: 'hidden',
-                          marginTop: 15,
-                        }}
+                        style={styles.likeIcon}
                         color="#00ffea"
                         size={19}
                       />
                     </TouchableWithoutFeedback>
+                    )}
+                    {!this.state.showLike && (
                     <TouchableWithoutFeedback onPress={() => this.unlikeReview({ item })}>
                       <MaterialCommunityIcons
                         name="thumb-up-outline"
-                        style={{
-                          color: '#00ffea',
-                          borderRadius: 20,
-                          borderWidth: 2,
-                          width: 40,
-                          height: 40,
-                          padding: 10,
-                          borderColor: '#00ffea',
-                          overflow: 'hidden',
-                          marginTop: 15,
-                          marginLeft: 10,
-                        }}
+                        style={styles.likeIcon}
                         color="#00ffea"
                         size={19}
                       />
                     </TouchableWithoutFeedback>
+                    )}
                   </View>
                 </View>
               )}

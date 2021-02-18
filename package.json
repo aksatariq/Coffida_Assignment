@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.4",
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.7",
     "@react-navigation/drawer": "^5.12.3",
@@ -19,6 +20,7 @@
     "@react-navigation/native": "^5.9.2",
     "@react-navigation/stack": "^5.14.2",
     "link": "^0.1.5",
+    "maps": "^0.3.3",
     "native-base": "^2.15.2",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
@@ -31,6 +33,8 @@
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
+    "react-native-swipe-list-view": "^3.2.6",
+    "react-native-swipeout": "^2.3.6",
     "react-native-tab-view": "^2.15.2",
     "react-native-vector-icons": "^7.1.0"
   },

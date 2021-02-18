@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Button } from 'react-native';
+import { Button, HeaderBackButton } from 'react-native';
 // import screens
 import HomeScreen from './components/HomeScreen';
 import SignUpScreen from './components/SignUp';
@@ -18,6 +18,9 @@ import SearchScreen from './components/SearchScreen';
 import LocationScreen from './components/LocationDetailsScreen';
 import LocationReviews from './components/LocationReviews';
 import AddReviewScreen from './components/AddReview';
+import TakePictureScreen from './components/TakePicture';
+import NearestLocation from './components/NearestLocation';
+
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -49,7 +52,7 @@ function HomeTabs() {
       />
       <Tab.Screen
         name="location"
-        component={MainScreen}
+        component={NearestLocation}
         options={{
           tabBarLabel: 'Location',
           showIcon: true,
@@ -159,6 +162,22 @@ function App() {
         <Stack.Screen
           name="addReview"
           component={AddReviewScreen}
+          options={{
+            title: 'Coffida',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#001624',
+            },
+            headerTintColor: 'white',
+            headerShown: true,
+            navigationOptions: ({ navigation }) => ({
+              headerLeft: (<HeaderBackButton onPress={() => navigation.navigate('locationReviews')} />),
+            }),
+          }}
+        />
+        <Stack.Screen
+          name="takePicture"
+          component={TakePictureScreen}
           options={{
             title: 'Coffida',
             headerTitleAlign: 'center',

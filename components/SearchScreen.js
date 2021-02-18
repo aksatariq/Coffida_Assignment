@@ -45,8 +45,8 @@ class SearchScreen extends Component {
       location_photopath: '',
       location_latitude: '',
       location_longitude: '',
-      limit: 20,
-      offset: 0,
+      limit: 2,
+      offset: 2,
 
     };
   }
@@ -68,7 +68,8 @@ class SearchScreen extends Component {
       if (tokenId != null) {
         // store the token
         this.setState({ token: tokenId });
-        this.setState({ limit: 20 });
+        this.setState({ limit: 2 });
+        this.setState({ offset: 2 });
 
         // call to display all locations
         this.updateSearch('');
@@ -87,6 +88,7 @@ class SearchScreen extends Component {
     // const navigation = this.props.navigation;
     console.log('searching....');
     console.log(text);
+    console.log(this.state.limit);
 
     return fetch(`http://10.0.2.2:3333/api/1.0.0/find/?q=${this.state.searchValue}&clenliness_rating=${this.state.cleanliness_rating}&price_rating=${this.state.price_rating}&quality_rating=${this.state.quality_rating}&overall_rating=${this.state.overall_rating}&limit=${this.state.limit}`,
       {
@@ -116,10 +118,10 @@ class SearchScreen extends Component {
   };
 
   showMoreData = () => {
-    const currentLimit = this.state.limit;
-    const currentOffset = this.state.offset;
-    this.state.limit = id + 20;
-    this.state.offset = currentOffset + 20;
+    this.setState({
+      limit: this.state.limit + 2,
+      offset: this.state.offset + 2,
+    }, () => this.updateSearch(this.state.search));
   }
 
   locationDetails = async ({ item }) => {
@@ -198,21 +200,40 @@ class SearchScreen extends Component {
     return (
       <SafeAreaView style={styles.mainBg}>
         <FlatList
-          data={this.state.locationData}
+          data={this.state.locationData.sort((a, b) => a.location_name.localeCompare(b.location_name))}
           keyExtractor={(item, index) => item.location_id.toString()}
           renderItem={({ item }) => (
             <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
-              <View style={styles.row}>
-                <Text style={styles.formText}>{item.location_name}</Text>
-                <Text style={styles.formText}>{item.location_town}</Text>
-                <Image
-                  style={{
-                    width: 107,
-                    height: 165,
-                    padding: 100,
-                  }}
-                  source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }}
-                />
+              <View style={styles.rowFront}>
+                <View style={styles.row}>
+                  <Image
+                    style={{ width: 78, height: 123 }}
+                    source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/2/review/11/photo' }}
+                  />
+                  <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <Text style={styles.reviewHeader}>
+                      {item.location_name}
+                      {', '}
+                      {' '}
+                      {item.location_town}
+                    </Text>
+                    <Text style={styles.reviewInfo}>
+                      Overall:
+                      {item.avg_overall_rating}
+                      {' | '}
+                      Quality:
+                      {' '}
+                      {item.avg_quality_rating}
+                      {' | '}
+                      Price:
+                      {item.avg_price_rating}
+                      {' | '}
+                      Hygeine:
+                      {' '}
+                      {item.avg_clenliness_rating}
+                    </Text>
+                  </View>
+                </View>
               </View>
             </TouchableWithoutFeedback>
           )}
@@ -245,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00ffea',
     width: 100,
     color: 'white',
-
+    margin: 18,
   },
   buttonText: {
     color: 'white',
@@ -258,6 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    marginLeft: 16,
   },
   searchBar: {
     fontSize: 10,
@@ -286,16 +308,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  row: {
+  reviewHeader: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    paddingLeft: 10,
+    lineHeight: 25,
 
+  },
+  reviewInfo: {
+    fontSize: 15,
+    color: 'grey',
+    flexShrink: 1,
+    lineHeight: 30,
+    paddingLeft: 10,
+    paddingTop: 2,
+
+  },
+  row: {
     flex: 1,
     paddingVertical: 25,
-    paddingHorizontal: 15,
-    flexDirection: 'column',
+    paddingHorizontal: 20,
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
 
+  },
+  flatListTitle: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'white',
+    flexShrink: 1,
+    fontWeight: 'bold',
+    marginBottom: 35,
   },
 
 });

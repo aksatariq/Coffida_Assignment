@@ -1,125 +1,33 @@
+/* eslint-disable no-useless-concat */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable radix */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
-  Text, View, StyleSheet, ScrollView,
+  Text, View, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback,
+  ToastAndroid, ActivityIndicator, FlatList, SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-class MainScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      token: '',
-    };
-  }
-
-  componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () =>{
-      this.checkLoggedin();
-    });
-
-    this.getData();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-    checkLoggedin = async () => {
-      const token = await AsyncStorage.getItem('@session_token');
-      this.setState({ token });
-
-      if (token == null) {
-        this.props.navigation.navigate('settings');
-      }
-    }
-
-    getData = () => {
-      console.log("called");
-    }
-
-    render() {
-      return (
-
-        <View style={styles.mainBg}>
-          <ScrollView>
-            <View style={styles.formItem}>
-              <Text style={styles.title}>Reviews</Text>
-            </View>
-
-            {/* <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>First Name:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    onChangeText={(first_name) => this.setState({first_name})}
-                    value={this.state.first_name}
-                    />
-                </View>
-
-                <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>Last Name:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    onChangeText={(last_name) => this.setState({last_name})}
-                    value={this.state.last_name}
-                    />
-                </View>
-
-                 <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>Email:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    onChangeText={(email) => this.setState({email})}
-                    value={this.state.email}
-                    />
-                </View>
-
-                <View style={styles.formItem}>
-                    <Text style={styles.formLabel}>Password:</Text>
-                    <TextInput
-                    style={styles.formInput}
-                    onChangeText={(password) => this.setState({password})}
-                    value={this.state.password}
-                    />
-                </View>
-
-                <View style={styles.formItem}>
-                    <TouchableOpacity
-                    style={styles.formTouch}
-                    onPress={() => this.updateUser()}
-                    >
-                    <Text style={styles.formTouchText}>update</Text>
-                    </TouchableOpacity>
-                 </View>  */}
-
-            {/* <View style={styles.formItem}>
-                    <TouchableOpacity
-                    style={styles.formTouch}
-                    onPress={() => this.logout()}
-                    >
-                    <Text style={styles.formTouchText}>logout</Text>
-                    </TouchableOpacity>
-                 </View>  */}
-          </ScrollView>
-        </View>
-
-      );
-    }
-}
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 const styles = StyleSheet.create({
 
   mainBg: {
     backgroundColor: '#001624',
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
   },
-  title: {
+  Header: {
+    fontWeight: 'bold',
+    fontSize: 15,
     color: 'white',
-    fontSize: 30,
-    alignSelf: 'center',
-    marginTop: 35,
+    paddingLeft: 22,
+    paddingTop: 5,
+    fontFamily: 'Cochin',
   },
   subTitle: {
     color: 'grey',
@@ -127,6 +35,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'center',
 
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 5,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-end',
+    margin: 10,
   },
   formItem: {
     padding: 20,
@@ -148,14 +75,347 @@ const styles = StyleSheet.create({
     padding: 12,
     width: 290,
     alignSelf: 'center',
+
   },
-  formTouchText: {
-    fontSize: 18,
+  reviewHeader: {
     fontWeight: 'bold',
+    fontSize: 15,
     color: 'white',
-    alignSelf: 'center',
+    paddingLeft: 10,
+    lineHeight: 25,
+
+  },
+  reviewInfo: {
+    fontSize: 15,
+    color: 'grey',
+    flexShrink: 1,
+    lineHeight: 30,
+    paddingLeft: 10,
+    paddingTop: 2,
+
+  },
+  row: {
+    flex: 1,
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+  },
+  flatListTitle: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'white',
+    flexShrink: 1,
+    fontWeight: 'bold',
+    marginBottom: 35,
+  },
+
+  likeIcon: {
+
+    color: '#00ffea',
+    borderRadius: 20,
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    padding: 10,
+    borderColor: '#00ffea',
+    overflow: 'hidden',
+    marginTop: 15,
+  },
+
+  favouriteIcon: {
+
+    color: '#00ffea',
+    borderRadius: 20,
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    padding: 9,
+    borderColor: '#00ffea',
+    overflow: 'hidden',
+    marginTop: 20,
   },
 
 });
 
-export default MainScreen;
+class LocationDetailsScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: true,
+      userData: [],
+      swipeoutBtns: [
+        {
+          text: 'Button',
+        },
+      ],
+      userReviews: [],
+      token: '',
+      user_id: 0,
+      overall_rating: '',
+      price_rating: '',
+      quality_rating: '',
+      clenliness_rating: '',
+      review_body: '',
+      orig_overall_rating: '',
+      orig_price_rating: '',
+      orig_quality_rating: '',
+      orig_clenliness_rating: '',
+      orig_review_body: '',
+      showFavourite: true,
+      showLike: true,
+      listViewData: [{}],
+
+    };
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkLoggedin();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+    checkLoggedin = async () => {
+      const token = await AsyncStorage.getItem('@session_token');
+      this.setState({ token });
+
+      if (token == null) {
+        this.props.navigation.navigate('home');
+      }
+      console.log('item received');
+      const userId = await AsyncStorage.getItem('@user_id');
+      console.log(userId);
+      this.setState({ user_id: userId });
+
+      this.getData();
+    }
+
+    getData = () => {
+      console.log('arrived');
+      console.log(this.state.user_id);
+      console.log(this.state.token);
+
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${this.state.user_id}`,
+        {
+          method: 'GET',
+          headers:
+          {
+            'X-Authorization': this.state.token,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } if (response.status === '400') {
+            throw new Error('Bad request!');
+          } else {
+            throw new Error('Something went wrong');
+          }
+        })
+        .then(async (responseJson) => {
+          console.log(responseJson.reviews);
+
+          this.setState({
+            userData: responseJson,
+            userReviews: responseJson.reviews,
+            isLoading: true,
+          });
+        })
+
+        .catch((error) => {
+        // console.error(error);
+          ToastAndroid.show(error, ToastAndroid.SHORT);
+        });
+    };
+
+    updateReview = ({ item }) => {
+      console.log('updateReview');
+      console.log(this.state.token);
+      console.log(item);
+
+      const toSend = {};
+
+      if (this.state.overall_rating !== item.overall_rating) {
+        toSend.overall_rating = this.state.overall_rating;
+        // eslint-disable-next-line no-unused-expressions
+      }
+
+      if (this.state.price_rating !== item.price_rating) {
+        toSend.price_rating = this.state.price_rating;
+      }
+
+      if (this.state.quality_rating !== item.quality_ratings) {
+        toSend.quality_rating = this.state.quality_rating;
+      }
+
+      if (this.state.review_body !== item.review_body) {
+        toSend.review_body = this.state.review_body;
+      }
+      console.log(toSend);
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,
+        {
+          method: 'PATCH',
+          headers:
+          {
+            'Content-Type': 'application/json',
+            'X-Authorization': this.state.token,
+          },
+          body: JSON.stringify(toSend),
+        })
+        .then((response) => {
+          if (!response.ok) {
+            // get error message from body or default to response status
+            console.log(response);
+          }
+          console.log('update!');
+        })
+        .catch((error) => {
+          console.error('There was an error!', error);
+        });
+    }
+
+    deleteReview = ({ data }) => {
+      console.log('deleteReview');
+      // console.log(this.state.token);
+      // console.log(item.review_id);
+
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${data.item.location.location_id}/review/${data.item.review.review_id}`,
+        {
+          method: 'DELETE',
+          headers:
+          {
+            'Content-Type': 'application/json',
+            'X-Authorization': this.state.token,
+          },
+        })
+        .then((response) => {
+          if (!response.ok) {
+            // get error message from body or default to response status
+            console.log(response);
+          }
+          console.log('Deleted!');
+          this.getData();
+        })
+        .catch((error) => {
+          console.error('There was an error!', error);
+        });
+    }
+
+    takePicture = async ({ data }) => {
+      console.log('hello');
+      console.log(data.item.review.review_id);
+      console.log(data.item.location.location_id);
+
+      // this.setId(/, reviewId);
+      this.props.navigation.navigate('takePicture', {
+        reviewId: data.item.review.review_id,
+        locationId: data.item.location.location_id,
+      });
+    };
+
+    renderHeader = () => (
+      <View>
+        <Text style={styles.Header}>My Reviews:</Text>
+      </View>
+    )
+
+    render() {
+      if (this.state.isLoading) {
+        return (
+          <SwipeListView
+            style={styles.mainBg}
+            data={this.state.userReviews}
+            keyExtractor={(item) => item.review.review_id.toString()}
+            renderItem={(data) => (
+              <View style={styles.rowFront}>
+                <View style={styles.row}>
+                  <Image
+                    style={{ width: 78, height: 123 }}
+                    source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${data.item.location.location_id}` + '/review/' + `${data.item.review.review_id}` + '/photo' }}
+                  />
+                  <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <Text style={styles.reviewHeader}>
+                      {data.item.location.location_name}{', '} {data.item.location.location_town}
+                    </Text>
+                    <Text style={styles.reviewInfo}>Overall: {data.item.review.overall_rating}{' | '}Quality: {data.item.review.quality_rating}{' | '}Price: {data.item.review.price_rating}{' | '}Hygeine: {data.item.review.clenliness_rating}</Text>
+                    <Text style={styles.reviewInfo}>{data.item.review.review_body}</Text>
+
+                    <TouchableOpacity
+                      onPress={() => this.takePicture({ data })}
+                      style={styles.capture}
+                    >
+                      <MaterialCommunityIcons name="camera" size={23} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
+            renderHiddenItem={(data) => (
+              <View style={{ padding: 20 }}>
+                <TouchableWithoutFeedback onPress={() => this.deleteReview({ data })}>
+                  <Text style={styles.reviewInfo}>Delete</Text>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => this.updateReview({ data })}>
+                  <Text style={styles.reviewInfo}>Update</Text>
+                </TouchableWithoutFeedback>
+              </View>
+            )}
+            leftOpenValue={75}
+            rightOpenValue={0}
+            ListHeaderComponent={this.renderHeader()}
+
+          />
+        );
+      } else {
+        return (
+          <View style={styles.mainBg}>
+            <ActivityIndicator
+              size="large"
+              color="#00ff00"
+            />
+          </View>
+        );
+      }
+    }
+}
+
+export default LocationDetailsScreen;
+// data={this.state.userReviews}
+// keyExtractor={(item) => item.review.review_id.toString()}
+// renderItem={({ item }) => (
+//   <View style={styles.row}>
+//     <Image
+//       style={{ width: 78, height: 123 }}
+//       source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${item.location.location_id}` + '/review/' + `${item.review.review_id}` + '/photo' }}
+//     />
+//     <View style={{ flex: 1, flexDirection: 'column' }}>
+//       <Text style={styles.reviewHeader}>
+//         {item.location.location_name}{', '} {item.location.location_town}
+//       </Text>
+//       <Text style={styles.reviewInfo}>Overall: {item.review.overall_rating}{' | '}Quality: {item.review.quality_rating}{' | '}Price: {item.review.price_rating}{' | '}Hygeine: {item.review.clenliness_rating}</Text>
+//       <Text style={styles.reviewInfo}>{item.review.review_body}</Text>
+
+//       {/* <TouchableWithoutFeedback onPress={() => this.deleteReview({ item })}>
+//         <Text style={styles.formTouchText}>DELETE</Text>
+//       </TouchableWithoutFeedback>
+//       <TouchableWithoutFeedback onPress={() => this.updateReview({ item })}>
+//         <Text style={styles.formTouchText}>UPDATE</Text>
+//       </TouchableWithoutFeedback> */}
+//       <TouchableOpacity
+//         onPress={() => this.takePicture({ item })}
+//         style={styles.capture}
+//       >
+//         <MaterialCommunityIcons name="camera" size={23} />
+//       </TouchableOpacity>
+//     </View>
+//   </View>
+// )}
+// ListHeaderComponent={this.renderHeader()}
+
+// />

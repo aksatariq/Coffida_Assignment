@@ -2,7 +2,7 @@
 /* eslint-disable no-use-before-define */
 import React, { Component } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity,
+  Text, View, StyleSheet, Image, TouchableOpacity,
 } from 'react-native';
 // import PropTypes from 'prop-types';
 
@@ -26,7 +26,10 @@ class HomeScreen extends Component {
               <Text style={styles.buttonText}>SIGN UP</Text>
             </TouchableOpacity>
           </View>
-
+          <Image
+            style={styles.tinyLogo}
+            source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+          />
           <View style={styles.buttonView2}>
             <TouchableOpacity
               style={styles.buttonNoBg}
@@ -90,6 +93,10 @@ const styles = StyleSheet.create({
   buttonText2: {
     color: '#00ffea',
     fontSize: 18,
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
   },
 
 });
