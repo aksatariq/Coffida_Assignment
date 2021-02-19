@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr-rCA/values-fr-rCA.xml",
+            "outputFile": "/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr-rCA/values-fr-rCA.xml",
             "map": [
                 {
                     "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1cb9b9ea592aa2ea85233be252327dcf/appcompat-1.1.0/res/values-fr-rCA/values-fr-rCA.xml",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/db619a5754e02f14cccbc01f21307d5c/jetified-play-services-base-16.0.1/res/values-fr-rCA/values.xml",
+                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/056b9a1220e90bc174f62a185df6eb71/play-services-base-17.2.1/res/values-fr-rCA/values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -38,24 +38,7 @@
                     }
                 },
                 {
-                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/101be4efb5b33db8b79b245cdc90e9e0/jetified-play-services-basement-16.1.0/res/values-fr-rCA/values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "251",
-                        "endColumns": "219",
-                        "endOffsets": "470"
-                    },
-                    "to": {
-                        "startLines": "37",
-                        "startColumns": "4",
-                        "startOffsets": "4076",
-                        "endColumns": "219",
-                        "endOffsets": "4291"
-                    }
-                },
-                {
-                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/639e914bfc1efa21e36199d3ff2c5eef/core-1.1.0/res/values-fr-rCA/values-fr-rCA.xml",
+                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1667af20f7c5fbd17b27fd9fd70bfb91/core-1.2.0/res/values-fr-rCA/values-fr-rCA.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -69,6 +52,23 @@
                         "startOffsets": "5842",
                         "endColumns": "100",
                         "endOffsets": "5938"
+                    }
+                },
+                {
+                    "source": "/Users/aksatariq/.gradle/caches/transforms-2/files-2.1/ec298ce9cd851bbee0bf9d727ed28dbb/jetified-play-services-basement-17.2.1/res/values-fr-rCA/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "251",
+                        "endColumns": "219",
+                        "endOffsets": "470"
+                    },
+                    "to": {
+                        "startLines": "37",
+                        "startColumns": "4",
+                        "startOffsets": "4076",
+                        "endColumns": "219",
+                        "endOffsets": "4291"
                     }
                 }
             ]

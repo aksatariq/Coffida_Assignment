@@ -1,4 +1,4 @@
-# Referenced at /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:25
+# Referenced at /Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:31
 -keep class androidx.core.app.CoreComponentFactory { <init>(); }
-# Referenced at /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:25
+# Referenced at /Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml:31
 -keep class com.awesomeproject.MainApplication { <init>(); }

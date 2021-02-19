@@ -9,97 +9,124 @@
 9        android:targetSdkVersion="29" />
 10
 11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-11-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:5:5-77
-11-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:5:22-75
+11-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:5:5-77
+11-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:5:22-75
 12    <uses-permission android:name="android.permission.INTERNET" />
-12-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:4:5-67
-12-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:4:22-64
+12-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:4:5-67
+12-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:4:22-64
 13    <uses-permission android:name="android.permission.CAMERA" />
-13-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:5:5-65
-13-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:5:22-62
+13-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:5:5-65
+13-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:5:22-62
 14    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-14-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:6:5-70
-14-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:6:22-68
-15    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-15-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:7:5-79
-15-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:7:22-76
-16    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-16-->[com.facebook.flipper:flipper:0.54.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1c7787ec82631e0394972c76bdabe608/flipper-0.54.0/AndroidManifest.xml:16:5-76
-16-->[com.facebook.flipper:flipper:0.54.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1c7787ec82631e0394972c76bdabe608/flipper-0.54.0/AndroidManifest.xml:16:22-73
-17
-18    <uses-feature
-18-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:11:5-13:36
-19        android:name="android.hardware.camera"
-19-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:12:9-47
-20        android:required="false" />
-20-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:13:9-33
-21    <uses-feature
-21-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:14:5-16:36
-22        android:name="android.hardware.camera.autofocus"
-22-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:15:9-57
-23        android:required="false" />
-23-->[:react-native-camera] /Users/aksatariq/Desktop/Assignment/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:16:9-33
-24
-25    <application
-25-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:9:5-28:19
-26        android:name="com.awesomeproject.MainApplication"
-26-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:10:7-38
-27        android:allowBackup="false"
-27-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:14:7-34
-28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-28-->[androidx.core:core:1.1.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/639e914bfc1efa21e36199d3ff2c5eef/core-1.1.0/AndroidManifest.xml:24:18-86
-29        android:debuggable="true"
-30        android:icon="@mipmap/ic_launcher"
-30-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:12:7-41
-31        android:label="@string/app_name"
-31-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:11:7-39
-32        android:roundIcon="@mipmap/ic_launcher_round"
-32-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:13:7-52
-33        android:theme="@style/AppTheme"
-33-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:15:7-38
-34        android:usesCleartextTraffic="true" >
-34-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:7:18-53
-35        <activity
-35-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:16:7-26:18
-36            android:name="com.awesomeproject.MainActivity"
-36-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:17:9-37
-37            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-37-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:19:9-86
-38            android:label="@string/app_name"
-38-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:18:9-41
-39            android:launchMode="singleTask"
-39-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:20:9-40
-40            android:windowSoftInputMode="adjustResize" >
-40-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:21:9-51
-41            <intent-filter>
-41-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:22:9-25:25
-42                <action android:name="android.intent.action.MAIN" />
-42-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:23:13-65
-42-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:23:21-62
-43
-44                <category android:name="android.intent.category.LAUNCHER" />
-44-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:24:13-73
-44-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:24:23-70
-45            </intent-filter>
-46        </activity>
-47        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-47-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:27:7-84
-47-->/Users/aksatariq/Desktop/Assignment/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:27:17-81
-48        <activity
-48-->[com.google.android.gms:play-services-base:16.0.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/db619a5754e02f14cccbc01f21307d5c/jetified-play-services-base-16.0.1/AndroidManifest.xml:23:9-26:75
-49            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-49-->[com.google.android.gms:play-services-base:16.0.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/db619a5754e02f14cccbc01f21307d5c/jetified-play-services-base-16.0.1/AndroidManifest.xml:24:13-79
-50            android:exported="false"
-50-->[com.google.android.gms:play-services-base:16.0.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/db619a5754e02f14cccbc01f21307d5c/jetified-play-services-base-16.0.1/AndroidManifest.xml:25:13-37
-51            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-51-->[com.google.android.gms:play-services-base:16.0.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/db619a5754e02f14cccbc01f21307d5c/jetified-play-services-base-16.0.1/AndroidManifest.xml:26:13-72
-52
-53        <meta-data
-53-->[com.google.android.gms:play-services-basement:16.1.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/101be4efb5b33db8b79b245cdc90e9e0/jetified-play-services-basement-16.1.0/AndroidManifest.xml:23:9-25:69
-54            android:name="com.google.android.gms.version"
-54-->[com.google.android.gms:play-services-basement:16.1.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/101be4efb5b33db8b79b245cdc90e9e0/jetified-play-services-basement-16.1.0/AndroidManifest.xml:24:13-58
-55            android:value="@integer/google_play_services_version" />
-55-->[com.google.android.gms:play-services-basement:16.1.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/101be4efb5b33db8b79b245cdc90e9e0/jetified-play-services-basement-16.1.0/AndroidManifest.xml:25:13-66
-56    </application>
-57
-58</manifest>
+14-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:6:5-70
+14-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:6:22-68
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:7:5-80
+15-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:7:22-78
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:8:5-78
+16-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:8:22-76
+17    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+17-->[com.facebook.flipper:flipper:0.54.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1c7787ec82631e0394972c76bdabe608/flipper-0.54.0/AndroidManifest.xml:16:5-76
+17-->[com.facebook.flipper:flipper:0.54.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1c7787ec82631e0394972c76bdabe608/flipper-0.54.0/AndroidManifest.xml:16:22-73
+18
+19    <uses-feature
+19-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:11:5-13:36
+20        android:name="android.hardware.camera"
+20-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:12:9-47
+21        android:required="false" />
+21-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:13:9-33
+22    <uses-feature
+22-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:14:5-16:36
+23        android:name="android.hardware.camera.autofocus"
+23-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:15:9-57
+24        android:required="false" /> <!-- Include required permissions for Google Maps API to run. -->
+24-->[:react-native-camera] /Users/aksatariq/Desktop/as/Coffida_Assignment/node_modules/react-native-camera/android/build/intermediates/library_manifest/generalDebug/AndroidManifest.xml:16:9-33
+25    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+25-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:23:5-79
+25-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:23:22-76
+26
+27    <uses-feature
+27-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:26:5-28:35
+28        android:glEsVersion="0x00020000"
+28-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:27:9-41
+29        android:required="true" />
+29-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:28:9-32
+30
+31    <application
+31-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:10:5-32:19
+32        android:name="com.awesomeproject.MainApplication"
+32-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:11:7-38
+33        android:allowBackup="false"
+33-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:15:7-34
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.2.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/1667af20f7c5fbd17b27fd9fd70bfb91/core-1.2.0/AndroidManifest.xml:24:18-86
+35        android:debuggable="true"
+36        android:icon="@mipmap/ic_launcher"
+36-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:13:7-41
+37        android:label="@string/app_name"
+37-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:12:7-39
+38        android:roundIcon="@mipmap/ic_launcher_round"
+38-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:14:7-52
+39        android:theme="@style/AppTheme"
+39-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:16:7-38
+40        android:usesCleartextTraffic="true" >
+40-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/debug/AndroidManifest.xml:7:18-53
+41        <activity
+41-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:17:7-27:18
+42            android:name="com.awesomeproject.MainActivity"
+42-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:18:9-37
+43            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+43-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:20:9-86
+44            android:label="@string/app_name"
+44-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:19:9-41
+45            android:launchMode="singleTask"
+45-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:21:9-40
+46            android:windowSoftInputMode="adjustResize" >
+46-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:22:9-51
+47            <intent-filter>
+47-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:23:9-26:25
+48                <action android:name="android.intent.action.MAIN" />
+48-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:24:13-65
+48-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:24:21-62
+49
+50                <category android:name="android.intent.category.LAUNCHER" />
+50-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:25:13-73
+50-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:25:23-70
+51            </intent-filter>
+52        </activity>
+53        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+53-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:28:7-84
+53-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:28:17-81
+54
+55        <meta-data
+55-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:29:9-31:70
+56            android:name="com.google.android.geo.API_KEY"
+56-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:30:13-58
+57            android:value="AIzaSyBh2ylrKj-iK_RnzauzTMGUIsNta92IRRs" /> <!-- Needs to be explicitly declared on P+ -->
+57-->/Users/aksatariq/Desktop/as/Coffida_Assignment/android/app/src/main/AndroidManifest.xml:31:13-68
+58        <uses-library
+58-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:33:9-35:40
+59            android:name="org.apache.http.legacy"
+59-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:34:13-50
+60            android:required="false" />
+60-->[com.google.android.gms:play-services-maps:17.0.0] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:35:13-37
+61
+62        <activity
+62-->[com.google.android.gms:play-services-base:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/056b9a1220e90bc174f62a185df6eb71/play-services-base-17.2.1/AndroidManifest.xml:23:9-26:75
+63            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+63-->[com.google.android.gms:play-services-base:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/056b9a1220e90bc174f62a185df6eb71/play-services-base-17.2.1/AndroidManifest.xml:24:13-79
+64            android:exported="false"
+64-->[com.google.android.gms:play-services-base:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/056b9a1220e90bc174f62a185df6eb71/play-services-base-17.2.1/AndroidManifest.xml:25:13-37
+65            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+65-->[com.google.android.gms:play-services-base:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/056b9a1220e90bc174f62a185df6eb71/play-services-base-17.2.1/AndroidManifest.xml:26:13-72
+66
+67        <meta-data
+67-->[com.google.android.gms:play-services-basement:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/ec298ce9cd851bbee0bf9d727ed28dbb/jetified-play-services-basement-17.2.1/AndroidManifest.xml:23:9-25:69
+68            android:name="com.google.android.gms.version"
+68-->[com.google.android.gms:play-services-basement:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/ec298ce9cd851bbee0bf9d727ed28dbb/jetified-play-services-basement-17.2.1/AndroidManifest.xml:24:13-58
+69            android:value="@integer/google_play_services_version" />
+69-->[com.google.android.gms:play-services-basement:17.2.1] /Users/aksatariq/.gradle/caches/transforms-2/files-2.1/ec298ce9cd851bbee0bf9d727ed28dbb/jetified-play-services-basement-17.2.1/AndroidManifest.xml:25:13-66
+70    </application>
+71
+72</manifest>

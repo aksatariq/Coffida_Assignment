@@ -18,6 +18,7 @@ import SearchScreen from './components/SearchScreen';
 import LocationScreen from './components/LocationDetailsScreen';
 import LocationReviews from './components/LocationReviews';
 import AddReviewScreen from './components/AddReview';
+import UpdateReviewScreen from './components/UpdateReview';
 import TakePictureScreen from './components/TakePicture';
 import NearestLocation from './components/NearestLocation';
 
@@ -172,6 +173,22 @@ function App() {
             headerShown: true,
             navigationOptions: ({ navigation }) => ({
               headerLeft: (<HeaderBackButton onPress={() => navigation.navigate('locationReviews')} />),
+            }),
+          }}
+        />
+        <Stack.Screen
+          name="updateReview"
+          component={UpdateReviewScreen}
+          options={{
+            title: 'Coffida',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#001624',
+            },
+            headerTintColor: 'white',
+            headerShown: true,
+            navigationOptions: ({ navigation }) => ({
+              headerLeft: (<HeaderBackButton onPress={() => navigation.navigate('main')} />),
             }),
           }}
         />

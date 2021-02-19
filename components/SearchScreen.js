@@ -208,7 +208,7 @@ class SearchScreen extends Component {
                 <View style={styles.row}>
                   <Image
                     style={{ width: 78, height: 123 }}
-                    source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/2/review/11/photo' }}
+                    source={{ uri: item.photo_path }}
                   />
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text style={styles.reviewHeader}>

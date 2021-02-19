@@ -26,10 +26,6 @@ class HomeScreen extends Component {
               <Text style={styles.buttonText}>SIGN UP</Text>
             </TouchableOpacity>
           </View>
-          <Image
-            style={styles.tinyLogo}
-            source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-          />
           <View style={styles.buttonView2}>
             <TouchableOpacity
               style={styles.buttonNoBg}

@@ -234,50 +234,13 @@ class LocationDetailsScreen extends Component {
         });
     };
 
-    updateReview = ({ item }) => {
-      console.log('updateReview');
-      console.log(this.state.token);
-      console.log(item);
-
-      const toSend = {};
-
-      if (this.state.overall_rating !== item.overall_rating) {
-        toSend.overall_rating = this.state.overall_rating;
-        // eslint-disable-next-line no-unused-expressions
-      }
-
-      if (this.state.price_rating !== item.price_rating) {
-        toSend.price_rating = this.state.price_rating;
-      }
-
-      if (this.state.quality_rating !== item.quality_ratings) {
-        toSend.quality_rating = this.state.quality_rating;
-      }
-
-      if (this.state.review_body !== item.review_body) {
-        toSend.review_body = this.state.review_body;
-      }
-      console.log(toSend);
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,
-        {
-          method: 'PATCH',
-          headers:
-          {
-            'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
-          },
-          body: JSON.stringify(toSend),
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('update!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
+    updateReview = ({ data }) => {
+      this.props.navigation.navigate('updateReview');
+      this.props.navigation.navigate('updateReview', {
+        userId: this.state.user_id,
+        reviewId: data.item.review.review_id,
+        locationId: data.item.location.location_id,
+      });
     }
 
     deleteReview = ({ data }) => {
