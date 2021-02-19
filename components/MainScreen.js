@@ -224,7 +224,7 @@ class LocationDetailsScreen extends Component {
           this.setState({
             userData: responseJson,
             userReviews: responseJson.reviews,
-            isLoading: true,
+            isLoading: false,
           });
         })
 
@@ -289,7 +289,7 @@ class LocationDetailsScreen extends Component {
     )
 
     render() {
-      if (this.state.isLoading) {
+      if (!this.state.isLoading) {
         return (
           <SwipeListView
             style={styles.mainBg}
@@ -341,6 +341,7 @@ class LocationDetailsScreen extends Component {
             <ActivityIndicator
               size="large"
               color="#00ff00"
+              style={{ alignSelf: 'center' }}
             />
           </View>
         );

@@ -178,15 +178,18 @@ class UpdateReviewScreen extends Component {
     for (let i = 0; i < reviews.length; i++) {
       if (reviews[i].review.review_id === this.state.review_id) {
         console.log('matched id');
-        console.log(reviews[i].review.review_body);
-        this.state.review_body == reviews[i].review.review_body;
-        this.state.price_rating == reviews[i].review.review_pricerating;
-        this.state.quality_rating == reviews[i].review.review_qualityrating;
-        this.state.overall_rating == reviews[i].review.review_overallrating; 
-        this.state.clenliness_rating == reviews[i].review.review_clenlinessrating;
+        console.log(reviews[i].review);
 
-        this.state.location_name == reviews[i].location.location_name;
-        this.state.location_town == reviews[i].location.location_town;
+        this.setState({
+          review_body: reviews[i].review.review_body,
+          price_rating: reviews[i].review.review_pricerating,
+          quality_rating: reviews[i].review.review_qualityrating,
+          overall_rating: reviews[i].review.review_overallrating,
+          clenliness_rating: reviews[i].review.review_clenlinessrating,
+          location_name: reviews[i].location.location_name,
+          location_town: reviews[i].location.location_town,
+          isLoading: false,
+        });
       }
     }
   }
@@ -238,33 +241,48 @@ class UpdateReviewScreen extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.row}>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <Text style={styles.reviewHeader}>
-            {this.state.location_name}
-            {', '}
-            {' '}
-            {this.state.location_town}
-          </Text>
-          <Text style={styles.reviewInfo}>
-            Overall:
-            {this.state.overall_rating}
-            {' | '}
-            Quality:
-            {' '}
-            {this.state.quality_rating}
-            {' | '}
-            Price:
-            {this.state.price_rating}
-            {' | '}
-            Hygeine:
-            {' '}
-            {this.state.clenliness_rating}
-          </Text>
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.mainBg}>
+          <ActivityIndicator
+            size="large"
+            color="#00ff00"
+            style={{ alignSelf: 'center' }}
+          />
         </View>
-      </View>
-    );
+      );
+    } else {
+      return (
+        <View style={styles.row}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <Text style={styles.reviewHeader}>
+              {this.state.location_name}
+              {', '}
+              {' '}
+              {this.state.location_town}
+            </Text>
+            <Text style={styles.reviewInfo}>
+              Overall:
+              {this.state.overall_rating}
+              {' | '}
+              Quality:
+              {' '}
+              {this.state.quality_rating}
+              {' | '}
+              Price:
+              {this.state.price_rating}
+              {' | '}
+              Hygeine:
+              {' '}
+              {this.state.clenliness_rating}
+              Review Body:
+              {' '}
+              {this.state.review_body}
+            </Text>
+          </View>
+        </View>
+      );
+    }
   }
 }
 

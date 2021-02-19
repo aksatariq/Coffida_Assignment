@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable camelcase */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-expressions */
@@ -6,7 +7,7 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react';
 import {
-  Text, TextInput, View, StyleSheet, ScrollView, TouchableOpacity, ToastAndroid,
+  Text, TextInput, View, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
@@ -25,6 +26,7 @@ class SettingsScreen extends Component {
       orig_email: '',
       orig_first_name: '',
       orig_last_name: '',
+      isLoading: true,
     };
   }
 
@@ -85,7 +87,10 @@ class SettingsScreen extends Component {
 
           this.setState({ email: responseJson.email });
           this.setState({ first_name: responseJson.first_name });
-          this.setState({ last_name: responseJson.last_name });
+          this.setState({
+            last_name: responseJson.last_name,
+            isLoading: false,
+          });
 
           this.props.navigation.navigate('main');
         })
@@ -175,80 +180,92 @@ class SettingsScreen extends Component {
     }
 
     render() {
-      return (
+      if (this.state.isLoading) {
+        return (
+          <View style={styles.mainBg}>
+            <ActivityIndicator
+              size="large"
+              color="#00ff00"
+              style={{ alignSelf: 'center' }}
+            />
+          </View>
+        );
+      } else {
+        return (
 
-        <View style={styles.mainBg}>
-          <ScrollView>
-            <View style={styles.formItem}>
-              <Text style={styles.title}>Manage your account</Text>
-            </View>
+          <View style={styles.mainBg}>
+            <ScrollView>
+              <View style={styles.formItem}>
+                <Text style={styles.title}>Manage your account</Text>
+              </View>
 
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>First Name:</Text>
-              <TextInput
-                style={styles.formInput}
-                onChangeText={(first_name) => this.setState({ first_name })}
-                value={this.state.first_name}
-              />
-            </View>
+              <View style={styles.formItem}>
+                <Text style={styles.formLabel}>First Name:</Text>
+                <TextInput
+                  style={styles.formInput}
+                  onChangeText={(first_name) => this.setState({ first_name })}
+                  value={this.state.first_name}
+                />
+              </View>
 
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Last Name:</Text>
-              <TextInput
-                style={styles.formInput}
-                onChangeText={(last_name) => this.setState({ last_name })}
-                value={this.state.last_name}
-              />
-            </View>
+              <View style={styles.formItem}>
+                <Text style={styles.formLabel}>Last Name:</Text>
+                <TextInput
+                  style={styles.formInput}
+                  onChangeText={(last_name) => this.setState({ last_name })}
+                  value={this.state.last_name}
+                />
+              </View>
 
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Email:</Text>
-              <TextInput
-                style={styles.formInput}
-                onChangeText={(email) => this.setState({ email })}
-                value={this.state.email}
-              />
-            </View>
+              <View style={styles.formItem}>
+                <Text style={styles.formLabel}>Email:</Text>
+                <TextInput
+                  style={styles.formInput}
+                  onChangeText={(email) => this.setState({ email })}
+                  value={this.state.email}
+                />
+              </View>
 
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Password:</Text>
-              <TextInput
-                style={styles.formInput}
-                onChangeText={(password) => this.setState({ password })}
-                value={this.state.password}
-              />
-            </View>
+              <View style={styles.formItem}>
+                <Text style={styles.formLabel}>Password:</Text>
+                <TextInput
+                  style={styles.formInput}
+                  onChangeText={(password) => this.setState({ password })}
+                  value={this.state.password}
+                />
+              </View>
 
-            <View style={styles.formItem}>
-              <Text style={styles.formLabel}>Confirm Password:</Text>
-              <TextInput
-                style={styles.formInput}
-                onChangeText={(confirm_password) => this.setState({ confirm_password })}
-                value={this.state.confirm_password}
-              />
-            </View>
+              <View style={styles.formItem}>
+                <Text style={styles.formLabel}>Confirm Password:</Text>
+                <TextInput
+                  style={styles.formInput}
+                  onChangeText={(confirm_password) => this.setState({ confirm_password })}
+                  value={this.state.confirm_password}
+                />
+              </View>
 
-            <View style={styles.formItem}>
-              <TouchableOpacity
-                style={styles.formTouch}
-                onPress={() => this.updateUser()}
-              >
-                <Text style={styles.formTouchText}>update</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.formItem}>
+                <TouchableOpacity
+                  style={styles.formTouch}
+                  onPress={() => this.updateUser()}
+                >
+                  <Text style={styles.formTouchText}>update</Text>
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.formItem}>
-              <TouchableOpacity
-                style={styles.formTouch}
-                onPress={() => this.logout()}
-              >
-                <Text style={styles.formTouchText}>logout</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </View>
+              <View style={styles.formItem}>
+                <TouchableOpacity
+                  style={styles.formTouch}
+                  onPress={() => this.logout()}
+                >
+                  <Text style={styles.formTouchText}>logout</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
 
-      );
+        );
+      }
     }
 }
 

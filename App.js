@@ -4,10 +4,11 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Button, HeaderBackButton } from 'react-native';
+
 // import screens
 import HomeScreen from './components/HomeScreen';
 import SignUpScreen from './components/SignUp';
@@ -22,13 +23,30 @@ import UpdateReviewScreen from './components/UpdateReview';
 import TakePictureScreen from './components/TakePicture';
 import NearestLocation from './components/NearestLocation';
 
-
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
 function goTo() {
   this.props.navigation.navigate('addReview');
+}
+function getHeaderTitle(route) {
+  // If the focused route is not found, we need to assume it's the initial screen
+  // This can happen during if there hasn't been any navigation inside the screen
+  // In our case, it's "Feed" as that's the first screen inside the navigator
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Feed';
+
+  // eslint-disable-next-line default-case
+  switch (routeName) {
+    case 'location':
+      return '';
+    case 'reviews':
+      return 'Coffida';
+    case 'search':
+      return 'Coffida';
+    case 'settings':
+      return 'Coffida';
+  }
 }
 
 function HomeTabs() {
@@ -127,8 +145,9 @@ function App() {
         <Stack.Screen
           name="main"
           component={HomeTabs}
-          options={{
-            title: 'Coffida',
+
+          options={({ route }) => ({
+            headerTitle: getHeaderTitle(route),
             headerStyle: {
               backgroundColor: '#001624',
             },
@@ -137,7 +156,7 @@ function App() {
             headerShown: true,
             headerLeft: null,
             gesturesEnabled: false,
-          }}
+          })}
         />
         <Stack.Screen
           name="locationReviews"

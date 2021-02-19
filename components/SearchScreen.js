@@ -107,7 +107,7 @@ class SearchScreen extends Component {
         console.log(responseJson);
         this.setState({
           locationData: responseJson,
-          isLoading: true,
+          isLoading: false,
         });
       })
 
@@ -197,51 +197,63 @@ class SearchScreen extends Component {
 
   // eslint-disable-next-line consistent-return
   render() {
-    return (
-      <SafeAreaView style={styles.mainBg}>
-        <FlatList
-          data={this.state.locationData.sort((a, b) => a.location_name.localeCompare(b.location_name))}
-          keyExtractor={(item, index) => item.location_id.toString()}
-          renderItem={({ item }) => (
-            <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
-              <View style={styles.rowFront}>
-                <View style={styles.row}>
-                  <Image
-                    style={{ width: 78, height: 123 }}
-                    source={{ uri: item.photo_path }}
-                  />
-                  <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.reviewHeader}>
-                      {item.location_name}
-                      {', '}
-                      {' '}
-                      {item.location_town}
-                    </Text>
-                    <Text style={styles.reviewInfo}>
-                      Overall:
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.mainBg}>
+          <ActivityIndicator
+            size="large"
+            color="#00ff00"
+            style={{ alignSelf: 'center' }}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.mainBg}>
+          <FlatList
+            data={this.state.locationData.sort((a, b) => a.location_name.localeCompare(b.location_name))}
+            keyExtractor={(item, index) => item.location_id.toString()}
+            renderItem={({ item }) => (
+              <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
+                <View style={styles.rowFront}>
+                  <View style={styles.row}>
+                    <Image
+                      style={{ width: 78, height: 123 }}
+                      source={{ uri: item.photo_path }}
+                    />
+                    <View style={{ flex: 1, flexDirection: 'column' }}>
+                      <Text style={styles.reviewHeader}>
+                        {item.location_name}
+                        {', '}
+                        {' '}
+                        {item.location_town}
+                      </Text>
+                      <Text style={styles.reviewInfo}>
+                        Overall:
                       {item.avg_overall_rating}
-                      {' | '}
-                      Quality:
+                        {' | '}
+                        Quality:
                       {' '}
-                      {item.avg_quality_rating}
-                      {' | '}
-                      Price:
+                        {item.avg_quality_rating}
+                        {' | '}
+                        Price:
                       {item.avg_price_rating}
-                      {' | '}
-                      Hygeine:
+                        {' | '}
+                        Hygeine:
                       {' '}
-                      {item.avg_clenliness_rating}
-                    </Text>
+                        {item.avg_clenliness_rating}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-          ListFooterComponent={this.renderFooter()}
-          ListHeaderComponent={this.renderHeader()}
-        />
-      </SafeAreaView>
-    );
+              </TouchableWithoutFeedback>
+            )}
+            ListFooterComponent={this.renderFooter()}
+            ListHeaderComponent={this.renderHeader()}
+          />
+        </SafeAreaView>
+      );
+    }
   }
 }
 
