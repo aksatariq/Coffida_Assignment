@@ -7,15 +7,14 @@
 /* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback,
-  ToastAndroid, ActivityIndicator, FlatList, ScrollView, Button,
+  Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  Container, Header, Content, Tab, Tabs,
-} from 'native-base';
-import Tab1 from './HomeScreen';
-import Tab2 from './LoginPage';
+import Filter from 'bad-words';
+
+const filter = new Filter();
+
+filter.addWords('cakes', 'tea', 'coffee');
 
 const styles = StyleSheet.create({
 
@@ -108,7 +107,7 @@ class AddReviewScreen extends Component {
     addReview = async () => {
       console.log('addReview');
       console.log(this.state.token);
-
+      console.log(filter.clean(this.state.review_body));
       const locationId = await AsyncStorage.getItem('@location_id');
       const tokenId = await AsyncStorage.getItem('@session_token');
 
@@ -120,7 +119,7 @@ class AddReviewScreen extends Component {
         price_rating: parseInt(this.state.price_rating),
         quality_rating: parseInt(this.state.quality_rating),
         clenliness_rating: parseInt(this.state.cleanliness_rating),
-        review_body: this.state.review_body,
+        review_body: filter.clean(this.state.review_body),
       };
       console.log(dataToSend);
       return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,

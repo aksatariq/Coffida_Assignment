@@ -7,10 +7,12 @@
 /* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
-  Text, View, StyleSheet, SafeAreaView, Image, TouchableWithoutFeedback,
-  ToastAndroid, ActivityIndicator, FlatList, ScrollView, Button,
+  Text, View, StyleSheet, TouchableHighlight, Image,
+  ToastAndroid, ActivityIndicator, TouchableOpacity, Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AirbnbRating } from 'react-native-ratings';
+import { TextInput } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
 
@@ -19,59 +21,28 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  title: {
+  reviewText: {
+    fontSize: 18,
     color: 'white',
-    fontSize: 30,
-    alignSelf: 'center',
-    marginTop: 35,
+    marginLeft: 10,
+    flexShrink: 1,
   },
-  subTitle: {
-    color: 'grey',
-    padding: 10,
-    fontSize: 15,
-    alignSelf: 'center',
-
-  },
-  buttonStyle: {
-    borderRadius: 3,
-    backgroundColor: '#00ffea',
-    width: 120,
+  reviewTextInput: {
+    fontSize: 18,
     color: 'white',
-    margin: 20,
-
+    marginLeft: 10,
+    height: 80,
+    marginTop: -20,
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    height: 35,
-    paddingTop: 6,
-  },
-  formItem: {
-    padding: 20,
-  },
-  formLabel: {
-    fontSize: 15,
-    color: 'grey',
-  },
-  formInput: {
-    borderRadius: 3,
-    color: 'grey',
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
-    marginTop: 20,
-  },
-  formTouch: {
-    backgroundColor: '#00ffea',
-    borderRadius: 3,
-    padding: 12,
-    width: 290,
-    alignSelf: 'center',
-  },
-  formTouchText: {
+  reviewHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  starRating: {
+    paddingVertical: 10,
   },
 
 });
@@ -88,17 +59,11 @@ class UpdateReviewScreen extends Component {
       location_id: 0,
       user_id: 0,
       review_id: 0,
-      location_id: 0,
       overall_rating: '',
       price_rating: '',
       quality_rating: '',
       clenliness_rating: '',
       review_body: '',
-      orig_overall_rating: '',
-      orig_price_rating: '',
-      orig_quality_rating: '',
-      orig_clenliness_rating: '',
-      orig_review_body: '',
 
     };
   }
@@ -177,47 +142,50 @@ class UpdateReviewScreen extends Component {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < reviews.length; i++) {
       if (reviews[i].review.review_id === this.state.review_id) {
-        console.log('matched id');
-        console.log(reviews[i].review);
+        this.state.userReviews = [];
 
         this.setState({
           review_body: reviews[i].review.review_body,
-          price_rating: reviews[i].review.review_pricerating,
-          quality_rating: reviews[i].review.review_qualityrating,
-          overall_rating: reviews[i].review.review_overallrating,
-          clenliness_rating: reviews[i].review.review_clenlinessrating,
+          price_rating: reviews[i].review.price_rating,
+          quality_rating: reviews[i].review.quality_rating,
+          overall_rating: reviews[i].review.overall_rating,
+          clenliness_rating: reviews[i].review.clenliness_rating,
           location_name: reviews[i].location.location_name,
           location_town: reviews[i].location.location_town,
           isLoading: false,
+          userReviews: reviews[i].review,
         });
       }
     }
   }
 
-  updateReview = ({ item }) => {
+  updateReview = () => {
     console.log('updateReview');
     console.log(this.state.token);
-    console.log(item);
 
     const toSend = {};
-
-    if (this.state.overall_rating !== item.review.review_overallrating) {
+    console.log(this.state.overall_rating);
+    console.log(this.state.userReviews.overall_rating);
+    if (this.state.overall_rating !== this.state.userReviews.overall_rating) {
       toSend.overall_rating = this.state.overall_rating;
-      // eslint-disable-next-line no-unused-expressions
+      console.log('in here');
     }
 
-    if (this.state.price_rating !== item.review.review_pricerating) {
+    if (this.state.price_rating !== this.state.userReviews.price_rating) {
       toSend.price_rating = this.state.price_rating;
     }
 
-    if (this.state.quality_rating !== item.review.review_qualityrating) {
+    if (this.state.quality_rating !== this.state.userReviews.quality_rating) {
       toSend.quality_rating = this.state.quality_rating;
     }
 
-    if (this.state.review_body !== item.review.review_body) {
+    if (this.state.clenliness_rating !== this.state.userReviews.clenliness_rating) {
+      toSend.clenliness_rating = this.state.clenliness_rating;
+    }
+
+    if (this.state.review_body !== this.state.userReviews.review_body) {
       toSend.review_body = this.state.review_body;
     }
-    console.log(toSend);
     return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${this.state.review_id}`,
       {
         method: 'PATCH',
@@ -240,6 +208,41 @@ class UpdateReviewScreen extends Component {
       });
   }
 
+  deletePhoto() {
+    console.log('delete  photo');
+    Alert.alert('Confirm Delete', 'Are you sure you want to remove this photo?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        { text: 'OK', onPress: () => this.callDelete() },
+      ],
+      { cancelable: false });
+  }
+
+  callDelete() {
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${this.state.review_id}/photo`,
+      {
+        method: 'DELETE',
+        headers:
+      {
+        'X-Authorization': this.state.token,
+      },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log(response);
+        }
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
+    // }
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -253,32 +256,97 @@ class UpdateReviewScreen extends Component {
       );
     } else {
       return (
-        <View style={styles.row}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <Text style={styles.reviewHeader}>
-              {this.state.location_name}
-              {', '}
-              {' '}
-              {this.state.location_town}
+        <View style={styles.mainBg}>
+          <View style={{
+            flex: 1, justifyContent: 'space-around', marginLeft: 10, flexDirection: 'column',
+          }}
+          >
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#00ffea',
+                  borderRadius: 3,
+                  width: 80,
+                  height: 30,
+                  alignSelf: 'flex-end',
+                  marginRight: 20,
+                  padding: 3,
+                }}
+                onPress={() => this.updateReview()}
+              >
+                <Text style={styles.reviewText}>update</Text>
+              </TouchableOpacity>
+
+              <TouchableHighlight onPress={() => this.deletePhoto()}>
+                <Image
+                  style={{
+                    width: 110, height: 110, padding: 5, borderRadius: 60, alignSelf: 'center',
+                  }}
+                  source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${this.state.location_id}` + '/review/' + `${this.state.review_id}` + '/photo' }}
+                />
+              </TouchableHighlight>
+              <Text style={styles.reviewHeader}>
+                {this.state.location_name}
+                {', '}
+                {' '}
+                {this.state.location_town}
+              </Text>
+            </View>
+            <Text style={styles.reviewText}>
+              Overall:{' '}
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.overall_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={( overall_rating ) => this.setState({overall_rating})}
+              />
             </Text>
-            <Text style={styles.reviewInfo}>
-              Overall:
-              {this.state.overall_rating}
-              {' | '}
-              Quality:
-              {' '}
-              {this.state.quality_rating}
-              {' | '}
-              Price:
-              {this.state.price_rating}
-              {' | '}
-              Hygeine:
-              {' '}
-              {this.state.clenliness_rating}
-              Review Body:
-              {' '}
+            <Text style={styles.reviewText}>
+              Quality:{' '}
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.quality_rating}
+                size={15}
+                style={styles.starRating}
+                showRating={false}
+                onFinishRating={( quality_rating ) => this.setState({quality_rating})}
+              />
+            </Text>
+            <Text style={styles.reviewText}>
+              Price:{' '}
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.price_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={( price_rating ) => this.setState({price_rating})}
+
+              />
+            </Text>
+            <Text style={styles.reviewText}>
+              Hygeine:{' '}
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.clenliness_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={( clenliness_rating ) => this.setState({clenliness_rating})}
+              />
+            </Text>
+            <TextInput
+              style={styles.reviewTextInput}
+              multiline
+              numberOfLines={5}
+              blurOnSubmit
+              onChangeText={( review_body ) => this.setState({review_body})}
+            >
               {this.state.review_body}
-            </Text>
+            </TextInput>
+
           </View>
         </View>
       );
