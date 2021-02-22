@@ -149,7 +149,7 @@ class NearestLocation extends Component {
     this.setState({
       isLoading: true,
     });
-    Geocoder.from('Levenshulme, Manchester, UK')
+    Geocoder.from(data.description)
       .then((json) => {
         var { location } = json.results[0].geometry;
         this.setState({

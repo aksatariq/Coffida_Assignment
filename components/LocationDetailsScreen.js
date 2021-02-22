@@ -110,9 +110,13 @@ class LocationDetailsScreen extends Component {
       }
       console.log('item received');
       const idCheck = this.props.route.params.locationId;
+      const locationName = this.props.route.params.locationName;
+      const locationTown = this.props.route.params.locationTown;
       this.setState({ location_id: idCheck });
       await AsyncStorage.setItem('@location_id', idCheck.toString());
-
+      await AsyncStorage.setItem('@location_name', locationName);
+      await AsyncStorage.setItem('@location_town', locationTown);
+      
       this.getData();
     }
 

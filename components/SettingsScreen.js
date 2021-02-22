@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import styles from './styles';
 
 class SettingsScreen extends Component {
   constructor(props) {
@@ -275,57 +276,5 @@ SettingsScreen.propTypes = {
     addListener: PropTypes.func.isRequired,
   }).isRequired,
 };
-
-const styles = StyleSheet.create({
-
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  title: {
-    color: 'white',
-    fontSize: 30,
-    alignSelf: 'center',
-    marginTop: 35,
-  },
-  subTitle: {
-    color: 'grey',
-    padding: 10,
-    fontSize: 15,
-    alignSelf: 'center',
-
-  },
-  formItem: {
-    padding: 20,
-  },
-  formLabel: {
-    fontSize: 15,
-    color: 'grey',
-  },
-  formInput: {
-    borderRadius: 3,
-    color: 'grey',
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
-    marginTop: 20,
-  },
-  formTouch: {
-    backgroundColor: '#00ffea',
-    borderRadius: 3,
-    padding: 12,
-    width: 290,
-    alignSelf: 'center',
-  },
-  formTouchText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-
-  },
-
-});
 
 export default SettingsScreen;

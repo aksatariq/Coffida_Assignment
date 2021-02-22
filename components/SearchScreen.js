@@ -11,15 +11,27 @@
 /* eslint-disable no-use-before-define */
 import React, { Component } from 'react';
 import {
-  View, StyleSheet, FlatList, TouchableWithoutFeedback, TouchableOpacity,
+  View, StyleSheet, Animated, FlatList, TouchableWithoutFeedback, TouchableOpacity,
   Text, Image, SafeAreaView, ActivityIndicator, ToastAndroid,
 } from 'react-native';
 // import PropTypes from 'prop-types';
 import { SearchBar, List, ListItem } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
+import { AirbnbRating } from 'react-native-ratings';
 
 const image = { uri: 'https://reactjs.org/logo-og.png' };
+const searchFilter = [
+  {
+    label: 'reviews',
+    value: 'reviews',
+  },
+  {
+    label: 'favourites',
+    value: 'favourites',
+  },
+];
 
 // eslint-disable-next-line react/prefer-stateless-function
 class SearchScreen extends Component {
@@ -82,15 +94,14 @@ class SearchScreen extends Component {
     });
     console.log('searching.22222...');
 
-    console.log(this.state.overall_rating);
-    console.log(this.state.cleanliness_rating);
+    console.log(this.state.search_in);
 
     // const navigation = this.props.navigation;
     console.log('searching....');
     console.log(text);
     console.log(this.state.limit);
 
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/find/?q=${this.state.searchValue}&clenliness_rating=${this.state.cleanliness_rating}&price_rating=${this.state.price_rating}&quality_rating=${this.state.quality_rating}&overall_rating=${this.state.overall_rating}&limit=${this.state.limit}`,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/find/?q=${this.state.searchValue}&clenliness_rating=${this.state.cleanliness_rating}&price_rating=${this.state.price_rating}&quality_rating=${this.state.quality_rating}&overall_rating=${this.state.overall_rating}&limit=${this.state.limit}&search_in=${this.state.search_in}`,
       {
         headers: { 'X-Authorization': this.state.token },
       })
@@ -127,6 +138,8 @@ class SearchScreen extends Component {
   locationDetails = async ({ item }) => {
     console.log('clicked');
     await AsyncStorage.setItem('@location_id', item.location_id.toString());
+    await AsyncStorage.setItem('@location_name', item.location_name);
+    await AsyncStorage.setItem('@location_town', item.location_town);
     this.props.navigation.navigate('locationReviews');
   }
 
@@ -145,42 +158,67 @@ class SearchScreen extends Component {
         placeholder="Search for a location..."
         value={this.state.searchValue}
       />
-      <View style={styles.sortView}>
-        <Text style={styles.sortFilters}> Sort:</Text>
-        <TextInput
-          style={styles.filterText}
-          placeholder="Overall"
-          placeholderTextColor="white"
-              // eslint-disable-next-line camelcase
-          onChangeText={(overall_rating) => this.setState({
-            overall_rating,
-          }, this.updateSearch)}
-        />
-        <TextInput
-          style={styles.filterText}
-          placeholder="Price"
-          placeholderTextColor="white"
-          onChangeText={(price_rating) => this.setState({
-            price_rating,
-          }, this.updateSearch)}
-        />
-        <TextInput
-          style={styles.filterText}
-          placeholder="Hygeine"
-          placeholderTextColor="white"
-          onChangeText={(cleanliness_rating) => this.setState({
-            cleanliness_rating,
-          }, this.updateSearch)}
-        />
-        <TextInput
-          style={styles.filterText}
-          placeholder="Quality"
-          placeholderTextColor="white"
-          onChangeText={(quality_rating) => this.setState({
-            quality_rating,
-          }, this.updateSearch)}
-        />
-      </View>
+      <Animated.ScrollView horizontal scrollEventThrottle={1} style={{ height: 50 }}>
+        <View style={styles.sortView}>
+          <TextInput
+            style={styles.filterText}
+            placeholder="Overall"
+            placeholderTextColor="white"
+                // eslint-disable-next-line camelcase
+            onChangeText={(overall_rating) => this.setState({
+              overall_rating,
+            }, this.updateSearch)}
+          />
+          <TextInput
+            style={styles.filterText}
+            placeholder="Price"
+            placeholderTextColor="white"
+            onChangeText={(price_rating) => this.setState({
+              price_rating,
+            }, this.updateSearch)}
+          />
+          <TextInput
+            style={styles.filterText}
+            placeholder="Hygeine"
+            placeholderTextColor="white"
+            onChangeText={(cleanliness_rating) => this.setState({
+              cleanliness_rating,
+            }, this.updateSearch)}
+          />
+          <TextInput
+            style={styles.filterText}
+            placeholder="Quality"
+            placeholderTextColor="white"
+            onChangeText={(quality_rating) => this.setState({
+              quality_rating,
+            }, this.updateSearch)}
+          />
+          <RNPickerSelect
+            onValueChange={(search_in) => this.setState({
+              search_in,
+            }, this.updateSearch)}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{ label: 'Select', value: '' }}
+            style={{
+              inputAndroid: {
+                color: 'white',
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: '#00ffea',
+                width: 78,
+                height: 25,
+                marginLeft: 8,
+                padding: 2,
+                textAlign: 'center',
+              },
+            }}
+            items={[
+              { label: 'Reviewed', value: 'reviewed' },
+              { label: 'Favourites', value: 'favourite' },
+            ]}
+          />
+        </View>
+      </Animated.ScrollView>
     </View>
   )
 
@@ -218,7 +256,7 @@ class SearchScreen extends Component {
                 <View style={styles.rowFront}>
                   <View style={styles.row}>
                     <Image
-                      style={{ width: 78, height: 123 }}
+                      style={{ width: 73, height: 90 }}
                       source={{ uri: item.photo_path }}
                     />
                     <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -228,21 +266,21 @@ class SearchScreen extends Component {
                         {' '}
                         {item.location_town}
                       </Text>
-                      <Text style={styles.reviewInfo}>
-                        Overall:
-                      {item.avg_overall_rating}
-                        {' | '}
-                        Quality:
-                      {' '}
-                        {item.avg_quality_rating}
-                        {' | '}
-                        Price:
-                      {item.avg_price_rating}
-                        {' | '}
-                        Hygeine:
-                      {' '}
-                        {item.avg_clenliness_rating}
-                      </Text>
+                        
+                        <View style={{ flex: 1, flexDirection: 'row'}} >
+                          
+                          <Text style={styles.reviewInfo}>
+                            Overall:
+                          </Text>
+                          <View style={{ marginTop:10}}>
+                          <AirbnbRating
+                            count={5}
+                            defaultRating={item.avg_overall_rating}
+                            size={15}
+                            showRating={false}
+                          />
+                          </View>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -269,10 +307,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#001624',
     flex: 1,
   },
-  flatListStyle: {
-    height: 80,
-    paddingTop: 20,
-  },
+
   buttonStyle: {
     borderRadius: 3,
     backgroundColor: '#00ffea',
@@ -325,7 +360,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'white',
     paddingLeft: 10,
-    lineHeight: 25,
 
   },
   reviewInfo: {
@@ -334,7 +368,8 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     lineHeight: 30,
     paddingLeft: 10,
-    paddingTop: 2,
+    paddingTop: 6,
+    width: 70,
 
   },
   row: {
@@ -343,6 +378,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: 400,
 
   },
   flatListTitle: {
@@ -352,6 +388,16 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontWeight: 'bold',
     marginBottom: 35,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'white',
+    paddingRight: 30, // to ensure the text is never behind the icon
   },
 
 });

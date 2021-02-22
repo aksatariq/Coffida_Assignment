@@ -14,6 +14,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { AirbnbRating } from 'react-native-ratings';
 
 const styles = StyleSheet.create({
 
@@ -85,15 +86,7 @@ const styles = StyleSheet.create({
     lineHeight: 25,
 
   },
-  reviewInfo: {
-    fontSize: 15,
-    color: 'grey',
-    flexShrink: 1,
-    lineHeight: 30,
-    paddingLeft: 10,
-    paddingTop: 2,
-
-  },
+  
   row: {
     flex: 1,
     paddingVertical: 25,
@@ -135,6 +128,15 @@ const styles = StyleSheet.create({
     borderColor: '#00ffea',
     overflow: 'hidden',
     marginTop: 20,
+  },
+  reviewInfo: {
+    fontSize: 15,
+    color: 'grey',
+    flexShrink: 1,
+    lineHeight: 30,
+    paddingLeft: 10,
+    paddingTop: 6,
+    width: 70,
   },
 
 });
@@ -226,6 +228,7 @@ class LocationDetailsScreen extends Component {
             userReviews: responseJson.reviews,
             isLoading: false,
           });
+          await AsyncStorage.setItem('@userData', JSON.stringify(responseJson));
         })
 
         .catch((error) => {
@@ -283,7 +286,7 @@ class LocationDetailsScreen extends Component {
     };
 
     renderHeader = () => (
-      <View>
+      <View style={{ marginTop: 25 }}>
         <Text style={styles.Header}>My Reviews:</Text>
       </View>
     )
@@ -306,8 +309,20 @@ class LocationDetailsScreen extends Component {
                     <Text style={styles.reviewHeader}>
                       {data.item.location.location_name}{', '} {data.item.location.location_town}
                     </Text>
-                    <Text style={styles.reviewInfo}>Overall: {data.item.review.overall_rating}{' | '}Quality: {data.item.review.quality_rating}{' | '}Price: {data.item.review.price_rating}{' | '}Hygeine: {data.item.review.clenliness_rating}</Text>
-                    <Text style={styles.reviewInfo}>{data.item.review.review_body}</Text>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+
+                      <Text style={styles.reviewInfo}>
+                        Overall:
+                      </Text>
+                      <View style={{ marginTop: 10 }}>
+                        <AirbnbRating
+                          count={5}
+                          defaultRating={data.item.review.overall_rating}
+                          size={15}
+                          showRating={false}
+                        />
+                      </View>
+                    </View>
 
                     <TouchableOpacity
                       onPress={() => this.takePicture({ data })}

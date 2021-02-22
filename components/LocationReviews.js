@@ -7,102 +7,74 @@
 /* eslint-disable no-else-return */
 import React, { Component, useState } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback,
-  ToastAndroid, ActivityIndicator, FlatList, SafeAreaView, Button,
+  Text, View, StyleSheet, TouchableOpacity, Image, TouchableWithoutFeedback,
+  ToastAndroid, ActivityIndicator, FlatList, TouchableHighlight, TextInput,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AirbnbRating } from 'react-native-ratings';
 
 const styles = StyleSheet.create({
 
   mainBg: {
     backgroundColor: '#001624',
     flex: 1,
-  },
-  title: {
-    color: 'white',
-    fontSize: 30,
-    alignSelf: 'center',
-    marginTop: 35,
-  },
-  subTitle: {
-    color: 'grey',
-    padding: 10,
-    fontSize: 15,
-    alignSelf: 'center',
-
-  },
-  formItem: {
-    padding: 20,
-  },
-  formLabel: {
-    fontSize: 15,
-    color: 'grey',
-  },
-  formInput: {
-    borderRadius: 3,
-    color: 'grey',
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
-    marginTop: 20,
-  },
-  formTouch: {
-    backgroundColor: '#00ffea',
-    borderRadius: 3,
-    padding: 12,
-    width: 290,
-    alignSelf: 'center',
-
-  },
-  formTouchText: {
-    fontSize: 16,
-    color: 'white',
-    flexShrink: 1,
-    lineHeight: 27,
-  },
-  row: {
-    flex: 1,
-    paddingVertical: 25,
-    paddingHorizontal: 15,
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
+  },
+  reviewText: {
+    fontSize: 15,
+    color: 'grey',
+    flexShrink: 1,
+    paddingBottom: 15,
+    width: 100,
+  },
+  reviewTextInput: {
+    fontSize: 15,
+    color: 'grey',
+    paddingBottom: 15,
 
   },
-  flatListTitle: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: 'white',
-    flexShrink: 1,
+  reviewHeader: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 35,
+    color: 'white',
+    alignSelf: 'center',
+    marginTop: 25,
+    marginBottom: 10,
+  },
+
+  favouriteIcon: {
+    color: '#00ffea',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#00ffea',
+    width: 33,
+    height: 33,
+    padding: 7,
+    overflow: 'hidden',
+    alignSelf: 'center',
+    marginTop: -90,
+    marginRight:20,
+
+  },
+  favouriteText: {
+    color: '#00ffea',
+    fontSize: 14,
+    alignSelf: 'center',
+    marginRight: 10,
+  },
+  starRating: {
+    paddingVertical: -100,
   },
 
   likeIcon: {
 
     color: '#00ffea',
-    borderRadius: 20,
-    borderWidth: 2,
     width: 40,
     height: 40,
     padding: 10,
-    borderColor: '#00ffea',
+    alignSelf: 'center',
     overflow: 'hidden',
-    marginTop: 15,
-  },
-
-  favouriteIcon: {
-
-    color: '#00ffea',
-    borderRadius: 20,
-    borderWidth: 2,
-    width: 40,
-    height: 40,
-    padding: 9,
-    borderColor: '#00ffea',
-    overflow: 'hidden',
-    marginTop: 20,
   },
 
 });
@@ -115,8 +87,12 @@ class LocationDetailsScreen extends Component {
       isLoading: true,
       locationData: [],
       locationReviews: [],
+      userData: [],
+      userLiked: [],
+      userFavourited: [],
+      userId: '',
       token: '',
-      location_id: 0,
+      locationId: 0,
       overall_rating: '',
       price_rating: '',
       quality_rating: '',
@@ -146,352 +122,405 @@ class LocationDetailsScreen extends Component {
     checkLoggedin = async () => {
       const token = await AsyncStorage.getItem('@session_token');
       this.setState({ token });
+      const userId = await AsyncStorage.getItem('@user_id');
+      this.setState({ userId });
 
       if (token == null) {
         this.props.navigation.navigate('home');
       }
-      console.log('item received');
       const locationId = await AsyncStorage.getItem('@location_id');
-      console.log(locationId);
-      this.setState({ location_id: locationId });
+      this.setState({ locationId });
 
-      this.getData();
+      this.getUserData();
     }
 
-    getData = () => {
-      console.log('arrived');
-      console.log(this.state.location_id);
-      console.log(this.state.token);
+    getData = () => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.locationId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } if (response.status === '400') {
+          throw new Error('Bad request!');
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
+      .then(async (responseJson) => {
+        console.log(responseJson.location_name);
 
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}`)
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } if (response.status === '400') {
-            throw new Error('Bad request!');
-          } else {
-            throw new Error('Something went wrong');
-          }
-        })
-        .then(async (responseJson) => {
-          console.log(responseJson);
-          this.setState({
-            locationData: responseJson,
-            locationReviews: responseJson.location_reviews,
-            isLoading: true,
-          });
-        })
-
-        .catch((error) => {
-        // console.error(error);
-          ToastAndroid.show(error, ToastAndroid.SHORT);
+        this.setState({
+          locationData: responseJson,
+          locationReviews: responseJson.location_reviews,
+          isLoading: true,
         });
-    };
+      })
 
-    addToFavourite = () => {
-      console.log('favourite');
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/favourite`,
-        {
-          method: 'POST',
-          headers: { 'X-Authorization': this.state.token },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log('error');
-          }
-          console.log('added!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
+      .catch((error) => {
+        ToastAndroid.show(error, ToastAndroid.SHORT);
+      });
+
+    getUserData = () => fetch(`http://10.0.2.2:3333/api/1.0.0/user/${this.state.userId}`,
+      {
+        headers: {
+          'X-Authorization': this.state.token,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } if (response.status === '400') {
+          throw new Error('Invalid Email or Password!');
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
+      .then(async (responseJson) => {
+        this.setState({
+          userLiked: responseJson.liked_reviews,
+          userFavourited: responseJson.favourite_locations,
         });
-    }
+        this.checkIfFavourite();
+        this.getData();
+      })
 
-    removeFromFavourite = () => {
-      console.log('remove favourite');
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/favourite`,
-        {
-          method: 'DELETE',
-          headers: { 'X-Authorization': this.state.token },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log('error');
-          }
-          console.log('deleted!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
+      .catch((error) => {
+        console.error(error);
+        ToastAndroid.show(error, ToastAndroid.SHORT);
+      })
 
-    addReview = () => {
-      console.log('addReview');
-      console.log(this.state.token);
-
-      const dataToSend = {
-        overall_rating: parseInt(this.state.overall_rating),
-        price_rating: parseInt(this.state.price_rating),
-        quality_rating: parseInt(this.state.quality_rating),
-        clenliness_rating: parseInt(this.state.cleanliness_rating),
-        review_body: this.state.review_body,
-      };
-      console.log(dataToSend);
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,
-        {
-          method: 'POST',
-          headers:
-          {
-            'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
-          },
-          body: JSON.stringify(dataToSend),
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('Addded!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
-
-    updateReview = ({ item }) => {
-      console.log('updateReview');
-      console.log(this.state.token);
-      console.log(item);
-
-      const toSend = {};
-
-      if (this.state.overall_rating !== item.overall_rating) {
-        toSend.overall_rating = this.state.overall_rating;
-        // eslint-disable-next-line no-unused-expressions
+    checkIfLiked = (reviewId) => {
+      this.state.showLike = false;
+      for (let i = 0; i < this.state.userLiked.length; i++) {
+        if (this.state.userLiked[i].review.review_id === reviewId) {
+          this.state.showLike = true;
+          console.log('matchedLike');
+        }
       }
+    }
 
-      if (this.state.price_rating !== item.price_rating) {
-        toSend.price_rating = this.state.price_rating;
+    checkIfFavourite = async () => {
+      this.state.showFavourite = false;
+      for (let i = 0; i < this.state.userFavourited.length; i++) {
+        const id = parseInt(this.state.locationId);
+        if (this.state.userFavourited[i].location_id === id) {
+          this.state.showFavourite = true;
+        }
       }
+    }
 
-      if (this.state.quality_rating !== item.quality_ratings) {
-        toSend.quality_rating = this.state.quality_rating;
-      }
+    addToFavourite = () => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.locationId}/favourite`,
+      {
+        method: 'POST',
+        headers: { 'X-Authorization': this.state.token },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log('error');
+        }
+        this.getUserData();
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      })
 
-      if (this.state.review_body !== item.review_body) {
-        toSend.review_body = this.state.review_body;
-      }
-      console.log(toSend);
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,
-        {
-          method: 'PATCH',
-          headers:
+    removeFromFavourite = () => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.locationId}/favourite`,
+      {
+        method: 'DELETE',
+        headers: { 'X-Authorization': this.state.token },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log('error');
+        }
+        this.getUserData();
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      })
+
+    likeReview = ({ item }) => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.locationId}/review/${item.review_id}/like`,
+      {
+        method: 'POST',
+        headers:
           {
             'Content-Type': 'application/json',
             'X-Authorization': this.state.token,
           },
-          body: JSON.stringify(toSend),
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('update!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log(response);
+        }
+        this.getUserData();
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      })
 
-    deleteReview = ({ item }) => {
-      console.log('deleteReview');
-      console.log(this.state.token);
-      console.log(item.review_id);
-
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${item.review_id}`,
-        {
-          method: 'DELETE',
-          headers:
+    unlikeReview = ({ item }) => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.locationId}/review/${item.review_id}/like`,
+      {
+        method: 'DELETE',
+        headers:
           {
             'Content-Type': 'application/json',
             'X-Authorization': this.state.token,
           },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('Deleted!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log(response);
+        }
+        this.getUserData();
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      })
 
-    renderHeader = () => (
-      <View style={{ flex: 1, flexDirection: 'row-reverse', margin: 10 }}>
-        {this.state.showFavourite && (
-        <TouchableOpacity hide={this.state.hidden} onPress={() => this.addToFavourite()}>
-          <MaterialCommunityIcons
-            name="heart"
-            style={styles.favouriteIcon}
-            color="#00ffea"
-            size={23}
-          />
-        </TouchableOpacity>
-        )}
-        {!this.state.showFavourite && (
-        <TouchableOpacity onPress={() => this.removeFromFavourite()}>
-          <MaterialCommunityIcons
-            name="heart-outline"
-            style={styles.favouriteIcon}
-            color="#00ffea"
-            size={23}
-          />
-        </TouchableOpacity>
-        )}
-      </View>
-    )
-
-    likeReview = ({ item }) => {
-      console.log('like');
-      console.log(this.state.token);
-      console.log(item.review_id);
-
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${item.review_id}/like`,
-        {
-          method: 'POST',
-          headers:
-          {
-            'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
-          },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('liked!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
-
-    unlikeReview = ({ item }) => {
-      console.log('unliked');
-      console.log(this.state.token);
-      console.log(item.review_id);
-
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${item.review_id}/like`,
-        {
-          method: 'DELETE',
-          headers:
-          {
-            'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
-          },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('unliked!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
-
-    render() {
-      if (this.state.isLoading) {
-        return (
-          <SafeAreaView style={styles.mainBg}>
-            <FlatList
-              data={this.state.locationReviews}
-              keyExtractor={(item) => item.review_id.toString()}
-              renderItem={({ item, index }) => (
-                <View style={styles.row}>
-                  <Text style={styles.flatListTitle}>Review no: {index}</Text>
-                  <Text style={styles.formTouchText}>Overall: {item.overall_rating}</Text>
-                  <Text style={styles.formTouchText}>Quality: {item.quality_rating}</Text>
-                  <Text style={styles.formTouchText}>Price: {item.price_rating}</Text>
-                  <Text style={styles.formTouchText}>Hygeine: {item.clenliness_rating}</Text>
-                  <Text style={styles.formTouchText}>{item.likes} likes</Text>
-                  <Text style={styles.formTouchText}>{item.review_body}</Text>
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
-                    {this.state.showLike && (
-                    <TouchableWithoutFeedback onPress={() => this.likeReview({ item })}>
-                      <MaterialCommunityIcons
-                        name="thumb-up"
-                        style={styles.likeIcon}
-                        color="#00ffea"
-                        size={19}
-                      />
-                    </TouchableWithoutFeedback>
-                    )}
-                    {!this.state.showLike && (
-                    <TouchableWithoutFeedback onPress={() => this.unlikeReview({ item })}>
-                      <MaterialCommunityIcons
-                        name="thumb-up-outline"
-                        style={styles.likeIcon}
-                        color="#00ffea"
-                        size={19}
-                      />
-                    </TouchableWithoutFeedback>
-                    )}
-                  </View>
-                </View>
-              )}
-              ListHeaderComponent={this.renderHeader()}
-            />
-          </SafeAreaView>
-        );
-      } else {
-        return (
-          <View style={styles.mainBg}>
-            <ActivityIndicator
-              size="large"
-              color="#00ff00"
-            />
+      renderHeader = () => (
+        <View style={{ padding: 10 }}>
+          <Text style={styles.reviewHeader}>
+            {this.state.locationData.location_name}
+            {', '}
+            {' '}
+            {this.state.locationData.location_town}
+          </Text>
+          <View>
+            <TouchableHighlight style={{ alignSelf: 'center' }} onPress={() => this.deletePhoto()}>
+              <Image
+                style={{
+                  width: 100, height: 100, padding: 5, marginLeft: 20, borderRadius: 60,
+                }}
+                source={{ uri: this.state.locationData.photo_path }}
+              />
+            </TouchableHighlight>
           </View>
-        );
+          <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
+            {this.state.showFavourite && (
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: '#00ffea',
+                flexDirection: 'row',
+                width: 40,
+              }}
+              onPress={() => this.removeFromFavourite()}
+            >
+              <MaterialCommunityIcons
+                name="heart"
+                style={styles.likeIcon}
+                color="#00ffea"
+                size={19}
+              />
+            </TouchableOpacity>
+
+            )}
+            {!this.state.showFavourite && (
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: '#00ffea',
+                flexDirection: 'row',
+                width: 40,
+              }}
+              onPress={() => this.addToFavourite()}
+            >
+              <MaterialCommunityIcons
+                name="heart-outline"
+                style={styles.likeIcon}
+                color="#00ffea"
+                size={19}
+              />
+            </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      )
+
+      render() {
+        if (this.state.isLoading) {
+          return (
+            <View style={styles.mainBg}>
+              <FlatList
+                data={this.state.locationReviews}
+                keyExtractor={(item) => item.review_id.toString()}
+                renderItem={({ item, index }) => (
+                  <View style={{padding: 20, marginTop:-30}}>
+                    <Text style={styles.reviewTextInput}>
+                      {item.review_body}
+                    </Text>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Text style={styles.reviewText}>
+                        Overall:{' '}
+                      </Text>
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={item.overall_rating}
+                        size={15}
+                        showRating={false}
+                        style={styles.starRating}
+                      />
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Text style={styles.reviewText}>
+                        Quality:{' '}
+                      </Text>
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={item.quality_rating}
+                        size={15}
+                        style={styles.starRating}
+                        showRating={false}
+                      />
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Text style={styles.reviewText}>
+                        Price:{' '}
+                      </Text>
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={item.price_rating}
+                        size={15}
+                        showRating={false}
+                        style={styles.starRating}
+                      />
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Text style={styles.reviewText}>
+                        Hygeine:{' '}
+                      </Text>
+
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={item.clenliness_rating}
+                        size={15}
+                        showRating={false}
+                        style={styles.starRating}
+                      />
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      {
+                    this.checkIfLiked(item.review_id)
+                  }
+                      {this.state.showLike && (
+                      <TouchableOpacity
+                        style={{
+                          alignSelf: 'center',
+                          borderRadius: 10,
+                          borderWidth: 1,
+                          borderColor: '#00ffea',
+                          flexDirection: 'row',
+                          marginTop: 20,
+                          width: 200,
+                          marginBottom:30
+
+                        }}
+                        onPress={() => this.unlikeReview({ item })}
+                      >
+                        <MaterialCommunityIcons
+                          name="thumb-up"
+                          style={styles.likeIcon}
+                          color="#00ffea"
+                          size={19}
+                        />
+                        <Text style={styles.favouriteText}>
+                          Unlike this review?
+                        </Text>
+                      </TouchableOpacity>
+
+                      )}
+                      {!this.state.showLike && (
+                      <TouchableOpacity
+                        style={{
+                          alignSelf: 'center',
+                          borderRadius: 10,
+                          borderWidth: 1,
+                          borderColor: '#00ffea',
+                          flexDirection: 'row',
+                          marginTop: 20,
+                          width: 200,
+                          marginBottom:30
+
+                        }}
+                        onPress={() => this.likeReview({ item })}
+                      >
+                        <MaterialCommunityIcons
+                          name="thumb-up-outline"
+                          style={styles.likeIcon}
+                          color="#00ffea"
+                          size={19}
+                        />
+                        <Text style={styles.favouriteText}>
+                          Like this review?
+                        </Text>
+                      </TouchableOpacity>
+                      )}
+                    </View>
+                  </View>
+                )}
+                ListHeaderComponent={this.renderHeader()}
+              />
+            </View>
+          // <SafeAreaView style={styles.mainBg}>
+          //   <FlatList
+          //     data={this.state.locationReviews}
+          //     keyExtractor={(item) => item.review_id.toString()}
+          //     renderItem={({ item, index }) => (
+          //       <View style={styles.row}>
+          //         <Text style={styles.flatListTitle}>Review no: {index}</Text>
+          //         <Text style={styles.formTouchText}>Overall: {item.overall_rating}</Text>
+          //         <Text style={styles.formTouchText}>Quality: {item.quality_rating}</Text>
+          //         <Text style={styles.formTouchText}>Price: {item.price_rating}</Text>
+          //         <Text style={styles.formTouchText}>Hygeine: {item.quality_rating}</Text>
+          //         <Text style={styles.formTouchText}>{item.likes} likes</Text>
+          //         <Text style={styles.formTouchText}>{item.review_body}</Text>
+          //         <View style={{ flex: 1, flexDirection: 'row' }}>
+          //           {
+          //             this.checkIfLiked(item.review_id)
+          //           }
+          //           {this.state.showLike && (
+          //           <TouchableWithoutFeedback onPress={() => this.unlikeReview({ item })}>
+          //             <MaterialCommunityIcons
+          //               name="thumb-up"
+          //               style={styles.likeIcon}
+          //               color="#00ffea"
+          //               size={19}
+          //             />
+          //           </TouchableWithoutFeedback>
+          //           )}
+          //           {!this.state.showLike && (
+          //           <TouchableWithoutFeedback onPress={() => this.likeReview({ item })}>
+          //             <MaterialCommunityIcons
+          //               name="thumb-up-outline"
+          //               style={styles.likeIcon}
+          //               color="#00ffea"
+          //               size={19}
+          //             />
+          //           </TouchableWithoutFeedback>
+          //           )}
+          //         </View>
+          //       </View>
+          //     )}
+          //   />
+          // </SafeAreaView>
+          );
+        } else {
+          return (
+            <View style={styles.mainBg}>
+              <ActivityIndicator
+                size="large"
+                color="#00ff00"
+              />
+            </View>
+          );
+        }
       }
-    }
 }
 
 export default LocationDetailsScreen;
-
-{ /* <View>
-          <RNCamera
-            ref={(ref) => {
-              this.camera = ref;
-            }}
-            captureAudio={false}
-            androidCameraPermissionOptions={{
-              title: 'Permission to use camera',
-              message: 'We need your permission to use your camera',
-              buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
-            }}
-            style={{
-              flex: 1,
-            }}
-          />
-          <Button title="Take photo" onPress={() => { this.takePicture(); }} />
-        </View> */ }
-
-// takePicture = async () => {
-//   console.log("here");
-//   if (this.camera) {
-//     const options = { quality: 0.5, base64: true };
-//     const data = await this.camera.takePictureAsync(options);
-//     console.log(data.uri);
-//   }
-// }

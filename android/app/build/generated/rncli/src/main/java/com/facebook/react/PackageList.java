@@ -17,6 +17,8 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 // @react-native-community/masked-view
 import org.reactnative.maskedview.RNCMaskedViewPackage;
+// @react-native-community/picker
+import com.reactnativecommunity.picker.RNCPickerPackage;
 // react-native-camera
 import org.reactnative.camera.RNCameraPackage;
 // react-native-geolocation-service
@@ -83,6 +85,7 @@ public class PackageList {
       new AsyncStoragePackage(),
       new GeolocationPackage(),
       new RNCMaskedViewPackage(),
+      new RNCPickerPackage(),
       new RNCameraPackage(),
       new RNFusedLocationPackage(),
       new RNGestureHandlerPackage(),

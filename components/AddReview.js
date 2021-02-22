@@ -1,20 +1,14 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable radix */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-console */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
   Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Filter from 'bad-words';
+import { AirbnbRating } from 'react-native-ratings';
 
 const filter = new Filter();
 
-filter.addWords('cakes', 'tea', 'coffee');
+filter.addWords('cakes', 'tea', 'cake');
 
 const styles = StyleSheet.create({
 
@@ -23,20 +17,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  title: {
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: 'white',
-    fontSize: 30,
     alignSelf: 'center',
-    marginTop: 35,
+    marginTop: 20,
   },
-  subTitle: {
-    color: 'grey',
-    padding: 10,
-    fontSize: 15,
-    alignSelf: 'center',
-
-  },
-  buttonStyle: {
+  greenButton: {
     borderRadius: 3,
     backgroundColor: '#00ffea',
     width: 120,
@@ -44,7 +32,7 @@ const styles = StyleSheet.create({
     margin: 20,
 
   },
-  buttonText: {
+  greenButtonText: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -53,29 +41,19 @@ const styles = StyleSheet.create({
   },
   formItem: {
     padding: 20,
+    // marginTop: 10,
   },
   formLabel: {
     fontSize: 15,
     color: 'grey',
+    paddingBottom:10,
   },
   formInput: {
     borderRadius: 3,
     color: 'grey',
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
-    marginTop: 20,
-  },
-  formTouch: {
-    backgroundColor: '#00ffea',
-    borderRadius: 3,
-    padding: 12,
-    width: 290,
-    alignSelf: 'center',
-  },
-  formTouchText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    // marginTop: 5,
   },
 
 });
@@ -85,50 +63,49 @@ class AddReviewScreen extends Component {
     super(props);
 
     this.state = {
-      isLoading: true,
-      locationData: [],
-      locationReviews: [],
-      token: '',
-      location_id: 0,
+      locationName: '',
+      locationTown: '',
       overall_rating: '',
       price_rating: '',
       quality_rating: '',
       clenliness_rating: '',
       review_body: '',
-      orig_overall_rating: '',
-      orig_price_rating: '',
-      orig_quality_rating: '',
-      orig_clenliness_rating: '',
-      orig_review_body: '',
 
     };
   }
 
+  componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkLoggedIn();
+    });
+  }
+
+  checkLoggedIn = async () => {
+    const locationName = await AsyncStorage.getItem('@location_name');
+    const locationTown = await AsyncStorage.getItem('@location_town');
+    this.setState({ locationName });
+  }
+
     addReview = async () => {
-      console.log('addReview');
-      console.log(this.state.token);
-      console.log(filter.clean(this.state.review_body));
       const locationId = await AsyncStorage.getItem('@location_id');
       const tokenId = await AsyncStorage.getItem('@session_token');
-
-      this.setState({ token: tokenId });
-      this.setState({ location_id: locationId });
 
       const dataToSend = {
         overall_rating: parseInt(this.state.overall_rating),
         price_rating: parseInt(this.state.price_rating),
         quality_rating: parseInt(this.state.quality_rating),
-        clenliness_rating: parseInt(this.state.cleanliness_rating),
+        clenliness_rating: parseInt(this.state.clenliness_rating),
         review_body: filter.clean(this.state.review_body),
       };
       console.log(dataToSend);
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review`,
+
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review`,
         {
           method: 'POST',
           headers:
           {
             'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
+            'X-Authorization': tokenId,
           },
           body: JSON.stringify(dataToSend),
         })
@@ -147,48 +124,71 @@ class AddReviewScreen extends Component {
     render() {
       return (
         <ScrollView style={styles.mainBg}>
+          <Text style={styles.header}>{this.state.locationName}</Text>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Overall Rating:</Text>
-            <TextInput
-              style={styles.formInput}
-              onChangeText={(overall_rating) => this.setState({ overall_rating })}
-              value={this.state.overall_rating}
-            />
+            <Text style={styles.reviewText}>
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.overall_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={(overall_rating) => this.setState({ overall_rating })}
+              />
+            </Text>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Price Rating:</Text>
-            <TextInput
-              style={styles.formInput}
-              onChangeText={(price_rating) => this.setState({ price_rating })}
-              value={this.state.price_rating}
-            />
+            <Text style={styles.reviewText}>
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.price_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={(price_rating) => this.setState({ price_rating })}
+              />
+            </Text>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Quality Rating:</Text>
-            <TextInput
-              style={styles.formInput}
-              onChangeText={(quality_rating) => this.setState({ quality_rating })}
-              value={this.state.last_name}
-            />
+            <Text style={styles.reviewText}>
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.quality_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={(quality_rating) => this.setState({ quality_rating })}
+              />
+            </Text>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Cleanliness Rating:</Text>
-            <TextInput
-              style={styles.formInput}
-              onChangeText={(cleanliness_rating) => this.setState({ cleanliness_rating })}
-              value={this.state.cleanliness_rating}
-            />
+            <Text style={styles.reviewText}>
+              <AirbnbRating
+                count={5}
+                defaultRating={this.state.clenliness_rating}
+                size={15}
+                showRating={false}
+                style={styles.starRating}
+                onFinishRating={(clenliness_rating) => this.setState({ clenliness_rating })}
+              />
+            </Text>
           </View>
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Review Body:</Text>
             <TextInput
               style={styles.formInput}
+              multiline
+              blurOnSubmit
               onChangeText={(review_body) => this.setState({ review_body })}
               value={this.state.review_body}
             />
           </View>
-          <TouchableOpacity style={styles.buttonStyle} onPress={() => this.addReview()}>
-            <Text style={styles.buttonText}>Add a review</Text>
+          <TouchableOpacity style={styles.greenButton} onPress={() => this.addReview()}>
+            <Text style={styles.greenButtonText}>Add</Text>
           </TouchableOpacity>
         </ScrollView>
       );

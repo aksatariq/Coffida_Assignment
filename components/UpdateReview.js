@@ -13,6 +13,11 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AirbnbRating } from 'react-native-ratings';
 import { TextInput } from 'react-native-gesture-handler';
+import Filter from 'bad-words';
+
+const filter = new Filter();
+
+filter.addWords('cakes', 'tea', 'cake');
 
 const styles = StyleSheet.create({
 
@@ -22,14 +27,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   reviewText: {
-    fontSize: 18,
-    color: 'white',
+    fontSize: 15,
+    color: 'grey',
     marginLeft: 10,
     flexShrink: 1,
   },
   reviewTextInput: {
-    fontSize: 18,
-    color: 'white',
+    fontSize: 15,
+    color: 'grey',
     marginLeft: 10,
     height: 80,
     marginTop: -20,
@@ -164,8 +169,6 @@ class UpdateReviewScreen extends Component {
     console.log(this.state.token);
 
     const toSend = {};
-    console.log(this.state.overall_rating);
-    console.log(this.state.userReviews.overall_rating);
     if (this.state.overall_rating !== this.state.userReviews.overall_rating) {
       toSend.overall_rating = this.state.overall_rating;
       console.log('in here');
@@ -184,7 +187,7 @@ class UpdateReviewScreen extends Component {
     }
 
     if (this.state.review_body !== this.state.userReviews.review_body) {
-      toSend.review_body = this.state.review_body;
+      toSend.review_body = filter.clean(this.state.review_body);
     }
     return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${this.state.review_id}`,
       {
