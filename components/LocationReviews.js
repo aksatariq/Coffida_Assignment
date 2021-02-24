@@ -291,54 +291,11 @@ class LocationDetailsScreen extends Component {
             <TouchableHighlight style={{ alignSelf: 'center' }} onPress={() => this.deletePhoto()}>
               <Image
                 style={{
-                  width: 100, height: 100, padding: 5, marginLeft: 20, borderRadius: 60,
+                  width: 85, height: 100, padding: 5, marginLeft: 20, borderRadius: 60, marginBottom: 30, marginTop: 20,
                 }}
                 source={{ uri: this.state.locationData.photo_path }}
               />
             </TouchableHighlight>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
-            {this.state.showFavourite && (
-            <TouchableOpacity
-              style={{
-                alignSelf: 'center',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#00ffea',
-                flexDirection: 'row',
-                width: 40,
-              }}
-              onPress={() => this.removeFromFavourite()}
-            >
-              <MaterialCommunityIcons
-                name="heart"
-                style={styles.likeIcon}
-                color="#00ffea"
-                size={19}
-              />
-            </TouchableOpacity>
-
-            )}
-            {!this.state.showFavourite && (
-            <TouchableOpacity
-              style={{
-                alignSelf: 'center',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#00ffea',
-                flexDirection: 'row',
-                width: 40,
-              }}
-              onPress={() => this.addToFavourite()}
-            >
-              <MaterialCommunityIcons
-                name="heart-outline"
-                style={styles.likeIcon}
-                color="#00ffea"
-                size={19}
-              />
-            </TouchableOpacity>
-            )}
           </View>
         </View>
       )

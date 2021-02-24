@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { AirbnbRating } from 'react-native-ratings';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const image = { uri: 'https://reactjs.org/logo-og.png' };
 const searchFilter = [
@@ -41,7 +42,9 @@ class SearchScreen extends Component {
       isLoading: true,
       search: '',
       locationData: [],
+      userFavourited: [],
       token: '',
+      userId: 0,
       searchValue: '',
       overall_rating: '',
       price_rating: '',
@@ -58,6 +61,7 @@ class SearchScreen extends Component {
       location_latitude: '',
       location_longitude: '',
       limit: 2,
+      showFavourite: true,
       offset: 2,
 
     };
@@ -74,6 +78,7 @@ class SearchScreen extends Component {
   }
 
     checkLoggedin = async () => {
+      this.getUserData();
       const tokenId = await AsyncStorage.getItem('@session_token');
 
       // check if token exists
@@ -82,6 +87,8 @@ class SearchScreen extends Component {
         this.setState({ token: tokenId });
         this.setState({ limit: 2 });
         this.setState({ offset: 2 });
+        const userId = await AsyncStorage.getItem('@user_id');
+        this.setState({ userId });
 
         // call to display all locations
         this.updateSearch('');
@@ -143,6 +150,74 @@ class SearchScreen extends Component {
     this.props.navigation.navigate('locationReviews');
   }
 
+  getUserData = () => fetch(`http://10.0.2.2:3333/api/1.0.0/user/${this.state.userId}`,
+    {
+      headers: {
+        'X-Authorization': this.state.token,
+      },
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      } if (response.status === '400') {
+        throw new Error('Invalid Email or Password!');
+      } else {
+        throw new Error('Something went wrong');
+      }
+    })
+    .then(async (responseJson) => {
+      this.setState({
+        userFavourited: responseJson.favourite_locations,
+      });
+    })
+
+    checkIfFavourite = (locationId) => {
+      console.log(locationId);
+      this.state.showFavourite = false;
+      for (let i = 0; i < this.state.userFavourited.length; i++) {
+        if (this.state.userFavourited[i].location_id === locationId) {
+          this.state.showFavourite = true;
+          console.log('matchedLike');
+        }
+      }
+      // this.updateSearch(' ');
+    }
+
+  addToFavourite = (locationId) => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/favourite`,
+    {
+      method: 'POST',
+      headers: { 'X-Authorization': this.state.token },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        // get error message from body or default to response status
+        console.log('error');
+      }
+      this.getUserData();
+      this.updateSearch(this.state.search);
+    })
+    .catch((error) => {
+      console.error('There was an error!', error);
+    })
+
+    removeFromFavourite = (locationId) => fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/favourite`,
+      {
+        method: 'DELETE',
+        headers: { 'X-Authorization': this.state.token },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          // get error message from body or default to response status
+          console.log('error');
+        }
+        console.log('sedning 23to udat');
+        this.getUserData();
+        this.updateSearch(this.state.search);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      })
+
   renderHeader = () => (
     <View>
       <SearchBar
@@ -158,6 +233,7 @@ class SearchScreen extends Component {
         placeholder="Search for a location..."
         value={this.state.searchValue}
       />
+
       <Animated.ScrollView horizontal scrollEventThrottle={1} style={{ height: 50 }}>
         <View style={styles.sortView}>
           <TextInput
@@ -249,14 +325,17 @@ class SearchScreen extends Component {
       return (
         <SafeAreaView style={styles.mainBg}>
           <FlatList
-            data={this.state.locationData.sort((a, b) => a.location_name.localeCompare(b.location_name))}
+            data={this.state.locationData.sort((a, b) => a.location_id.toString().localeCompare(b.location_id.toString()))}
             keyExtractor={(item, index) => item.location_id.toString()}
             renderItem={({ item }) => (
               <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
                 <View style={styles.rowFront}>
+                  {
+                    this.checkIfFavourite(item.location_id)
+                  }
                   <View style={styles.row}>
                     <Image
-                      style={{ width: 73, height: 90 }}
+                      style={{ width: 66, height: 77 }}
                       source={{ uri: item.photo_path }}
                     />
                     <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -266,20 +345,69 @@ class SearchScreen extends Component {
                         {' '}
                         {item.location_town}
                       </Text>
-                        
-                        <View style={{ flex: 1, flexDirection: 'row'}} >
-                          
-                          <Text style={styles.reviewInfo}>
-                            Overall:
-                          </Text>
-                          <View style={{ marginTop:10}}>
+
+                      <View style={{ flex: 1, flexDirection: 'row' }}>
+
+                        <Text style={styles.reviewInfo}>
+                          Overall:
+                        </Text>
+                        <View style={{ marginTop: 10 }}>
                           <AirbnbRating
                             count={5}
                             defaultRating={item.avg_overall_rating}
                             size={15}
                             showRating={false}
                           />
-                          </View>
+                        </View>
+                        <View>
+                          {this.state.showFavourite && (
+                          <TouchableOpacity
+                            style={{
+                              alignSelf: 'center',
+                              borderRadius: 5,
+                              borderWidth: 1,
+                              borderColor: '#00ffea',
+                              flexDirection: 'row',
+                              width: 70,
+                              height: 35,
+                              marginLeft: 50,
+                              marginTop: 35,
+                            }}
+                            onPress={() => this.removeFromFavourite(item.location_id)}
+                          >
+                            <MaterialCommunityIcons
+                              name="heart-plus"
+                              style={styles.likeIcon}
+                              color="#00ffea"
+                              size={19}
+                            />
+                          </TouchableOpacity>
+
+                          )}
+                          {!this.state.showFavourite && (
+                          <TouchableOpacity
+                            style={{
+                              alignSelf: 'center',
+                              borderRadius: 5,
+                              borderWidth: 1,
+                              borderColor: '#00ffea',
+                              flexDirection: 'row',
+                              width: 70,
+                              height: 35,
+                              marginLeft: 50,
+                              marginTop: 35,
+                            }}
+                            onPress={() => this.addToFavourite(item.location_id)}
+                          >
+                            <MaterialCommunityIcons
+                              name="heart-off"
+                              style={styles.likeIcon}
+                              color="#00ffea"
+                              size={19}
+                            />
+                          </TouchableOpacity>
+                          )}
+                        </View>
                       </View>
                     </View>
                   </View>
@@ -378,7 +506,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 400,
 
   },
   flatListTitle: {
@@ -398,6 +525,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  likeIcon: {
+
+    color: '#00ffea',
+    width: 50,
+    height: 50,
+    paddingTop: 15,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    paddingLeft: 25,
   },
 
 });

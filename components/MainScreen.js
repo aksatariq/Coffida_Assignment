@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     lineHeight: 25,
 
   },
-  
   row: {
     flex: 1,
     paddingVertical: 25,
@@ -297,16 +296,19 @@ class LocationDetailsScreen extends Component {
           <SwipeListView
             style={styles.mainBg}
             data={this.state.userReviews}
+            closeOnRowOpen
+            closeOnScroll
+            closeOnRowPress
             keyExtractor={(item) => item.review.review_id.toString()}
             renderItem={(data) => (
               <View style={styles.rowFront}>
                 <View style={styles.row}>
                   <Image
-                    style={{ width: 78, height: 123 }}
-                    source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${data.item.location.location_id}` + '/review/' + `${data.item.review.review_id}` + '/photo' }}
+                    style={{ width: 78, height: 123, backgroundColor: '#001624' }}
+                    source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${data.item.location.location_id}`}/review/${`${data.item.review.review_id}`}/photo?timestamp=${Date.now()}` }}
                   />
                   <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.reviewHeader}>
+                    <Text onPress={() => this.updateReview({ data })} style={styles.reviewHeader}>
                       {data.item.location.location_name}{', '} {data.item.location.location_town}
                     </Text>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -338,9 +340,6 @@ class LocationDetailsScreen extends Component {
               <View style={{ padding: 20 }}>
                 <TouchableWithoutFeedback onPress={() => this.deleteReview({ data })}>
                   <Text style={styles.reviewInfo}>Delete</Text>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={() => this.updateReview({ data })}>
-                  <Text style={styles.reviewInfo}>Update</Text>
                 </TouchableWithoutFeedback>
               </View>
             )}
