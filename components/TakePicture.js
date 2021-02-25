@@ -94,7 +94,7 @@ class TakePictureScreen extends Component {
                 flex: 1,
               }}
             />
-            <Button title="Take photo" onPress={() => { this.takePicture(); }} />
+            <Button style={styles.buttonNoBg} title="Take photo" onPress={() => { this.takePicture(); }} />
           </View>
 
         </View>
@@ -149,8 +149,12 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   greenButton: {
-    padding: 15,
-    alignSelf: 'center',
+    borderRadius: 3,
+    backgroundColor: '#00ffea',
+    width: 120,
+    color: 'white',
+    margin: 20,
+
   },
   buttonNoBg: {
     padding: 15,

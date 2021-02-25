@@ -1,10 +1,6 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable radix */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-console */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-else-return */
+/* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import {
   Text, View, StyleSheet, TouchableHighlight, Image,
@@ -12,8 +8,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AirbnbRating } from 'react-native-ratings';
-import { TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Filter from 'bad-words';
+import PropTypes from 'prop-types';
 
 const filter = new Filter();
 
@@ -29,15 +26,14 @@ const styles = StyleSheet.create({
   reviewText: {
     fontSize: 15,
     color: 'grey',
-    marginLeft: 10,
+    width: 100,
     flexShrink: 1,
   },
   reviewTextInput: {
     fontSize: 15,
     color: 'grey',
-    marginLeft: 10,
-    height: 80,
-    marginTop: -20,
+    marginTop: -10,
+    marginLeft: -25,
   },
   reviewHeader: {
     fontSize: 18,
@@ -46,10 +42,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 10,
   },
-  starRating: {
-    paddingVertical: 10,
-  },
 
+  updateButton: {
+    backgroundColor: '#00ffea',
+    borderRadius: 3,
+    padding: 12,
+    width: 290,
+    alignSelf: 'center',
+    marginBottom: 20,
+
+  },
+  formTouchText: {
+    fontSize: 15,
+    color: 'white',
+    flexShrink: 1,
+    lineHeight: 27,
+    textAlign: 'center',
+  },
 });
 
 class UpdateReviewScreen extends Component {
@@ -58,23 +67,25 @@ class UpdateReviewScreen extends Component {
 
     this.state = {
       isLoading: true,
-      userData: [],
       userReviews: [],
       token: '',
-      location_id: 0,
-      user_id: 0,
-      review_id: 0,
-      overall_rating: '',
-      price_rating: '',
-      quality_rating: '',
-      clenliness_rating: '',
-      review_body: '',
+      locationId: 0,
+      locationName: '',
+      locationTown: '',
+      userId: 0,
+      reviewId: 0,
+      overallRating: '',
+      priceRating: '',
+      qualityRating: '',
+      clenlinessRating: '',
+      reviewBody: '',
 
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+    const { navigation } = this.props;
+    this.unsubscribe = navigation.addListener('focus', () => {
       this.checkLoggedin();
     });
   }
@@ -88,30 +99,22 @@ class UpdateReviewScreen extends Component {
       this.setState({ token });
 
       if (token !== null) {
-        this.state.review_id = this.props.route.params.reviewId;
-        this.state.user_id = this.props.route.params.userId;
-        this.state.location_id = this.props.route.params.locationId;
+        this.state.reviewId = this.props.route.params.reviewId;
+        this.state.userId = this.props.route.params.userId;
+        this.state.locationId = this.props.route.params.locationId;
         this.state.token = await AsyncStorage.getItem('@session_token');
       }
-
-      console.log('>>>>');
-      console.log(this.state.location_id);
-      console.log(this.state.review_id);
-
       this.getData();
     }
 
   getData = () => {
-    console.log('arrived');
-    console.log(this.state.user_id);
-    console.log(this.state.token);
-
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${this.state.user_id}`,
+    const { userId, token } = this.state;
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userId}`,
       {
         method: 'GET',
         headers:
         {
-          'X-Authorization': this.state.token,
+          'X-Authorization': token,
         },
       })
       .then((response) => {
@@ -124,10 +127,7 @@ class UpdateReviewScreen extends Component {
         }
       })
       .then(async (responseJson) => {
-        console.log(responseJson.reviews);
-
         this.setState({
-          userData: responseJson,
           userReviews: responseJson.reviews,
           isLoading: true,
         });
@@ -135,28 +135,26 @@ class UpdateReviewScreen extends Component {
         this.renderData(responseJson.reviews);
       })
 
-      .catch((error) => {
-      // console.error(error);
-        ToastAndroid.show(error, ToastAndroid.SHORT);
+      .catch(() => {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       });
   };
 
   renderData = (reviews) => {
-    console.log('rendering....');
-    console.log(reviews);
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < reviews.length; i++) {
-      if (reviews[i].review.review_id === this.state.review_id) {
+    const { reviewId } = this.state;
+
+    for (let i = 0; i < reviews.length; i += 1) {
+      if (reviews[i].review.review_id === reviewId) {
         this.state.userReviews = [];
 
         this.setState({
-          review_body: reviews[i].review.review_body,
-          price_rating: reviews[i].review.price_rating,
-          quality_rating: reviews[i].review.quality_rating,
-          overall_rating: reviews[i].review.overall_rating,
-          clenliness_rating: reviews[i].review.clenliness_rating,
-          location_name: reviews[i].location.location_name,
-          location_town: reviews[i].location.location_town,
+          reviewBody: reviews[i].review.review_body,
+          priceRating: reviews[i].review.price_rating,
+          qualityRating: reviews[i].review.quality_rating,
+          overallRating: reviews[i].review.overall_rating,
+          clenlinessRating: reviews[i].review.clenliness_rating,
+          locationName: reviews[i].location.location_name,
+          locationTown: reviews[i].location.location_town,
           isLoading: false,
           userReviews: reviews[i].review,
         });
@@ -164,60 +162,58 @@ class UpdateReviewScreen extends Component {
     }
   }
 
-  updateReview = () => {
-    console.log('updateReview');
-    console.log(this.state.token);
-
+  updateReview = async () => {
+    const {
+      overallRating, priceRating, qualityRating, clenlinessRating,
+      reviewBody, userReviews, locationId, reviewId, token,
+    } = this.state;
     const toSend = {};
-    if (this.state.overall_rating !== this.state.userReviews.overall_rating) {
-      toSend.overall_rating = this.state.overall_rating;
-      console.log('in here');
+    if (overallRating !== userReviews.overall_rating) {
+      toSend.overall_rating = overallRating;
     }
 
-    if (this.state.price_rating !== this.state.userReviews.price_rating) {
-      toSend.price_rating = this.state.price_rating;
+    if (priceRating !== userReviews.price_rating) {
+      toSend.price_rating = priceRating;
     }
 
-    if (this.state.quality_rating !== this.state.userReviews.quality_rating) {
-      toSend.quality_rating = this.state.quality_rating;
+    if (qualityRating !== userReviews.quality_rating) {
+      toSend.quality_rating = qualityRating;
     }
 
-    if (this.state.clenliness_rating !== this.state.userReviews.clenliness_rating) {
-      toSend.clenliness_rating = this.state.clenliness_rating;
+    if (clenlinessRating !== userReviews.clenliness_rating) {
+      toSend.clenliness_rating = clenlinessRating;
     }
 
-    if (this.state.review_body !== this.state.userReviews.review_body) {
-      toSend.review_body = filter.clean(this.state.review_body);
+    if (reviewBody !== userReviews.review_body) {
+      toSend.review_body = filter.clean(reviewBody);
     }
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${this.state.review_id}`,
-      {
-        method: 'PATCH',
-        headers:
+    try {
+      const response = await fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review/${reviewId}`,
         {
-          'Content-Type': 'application/json',
-          'X-Authorization': this.state.token,
-        },
-        body: JSON.stringify(toSend),
-      })
-      .then((response) => {
-        if (!response.ok) {
-          // get error message from body or default to response status
-          console.log(response);
-        }
-        console.log('update!');
-      })
-      .catch((error) => {
-        console.error('There was an error!', error);
-      });
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': token,
+          },
+          body: JSON.stringify(toSend),
+        });
+      const { navigation } = this.props;
+      if (!response.ok) {
+        // get error message from body or default to response status
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+      }
+      navigation.goBack(null);
+    } catch (e) {
+      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+    }
   }
 
   deletePhoto() {
-    console.log('delete  photo');
     Alert.alert('Confirm Delete', 'Are you sure you want to remove this photo?',
       [
         {
           text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
+          onPress: () => ToastAndroid.show('Something went wrong', ToastAndroid.SHORT),
           style: 'cancel',
         },
         { text: 'OK', onPress: () => this.callDelete() },
@@ -226,28 +222,32 @@ class UpdateReviewScreen extends Component {
   }
 
   callDelete() {
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${this.state.location_id}/review/${this.state.review_id}/photo`,
+    const { locationId, reviewId, token } = this.state;
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review/${reviewId}/photo`,
       {
         method: 'DELETE',
         headers:
       {
-        'X-Authorization': this.state.token,
+        'X-Authorization': token,
       },
       })
       .then((response) => {
         if (!response.ok) {
           // get error message from body or default to response status
-          console.log(response);
+          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
         }
       })
-      .catch((error) => {
-        console.error('There was an error!', error);
+      .catch(() => {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       });
-    // }
   }
 
   render() {
-    if (this.state.isLoading) {
+    const {
+      overallRating, qualityRating, priceRating, clenlinessRating, reviewBody,
+      locationTown, locationName, locationId, reviewId, isLoading,
+    } = this.state;
+    if (isLoading) {
       return (
         <View style={styles.mainBg}>
           <ActivityIndicator
@@ -257,104 +257,112 @@ class UpdateReviewScreen extends Component {
           />
         </View>
       );
-    } else {
-      return (
-        <View style={styles.mainBg}>
-          <View style={{
-            flex: 1, justifyContent: 'space-around', marginLeft: 10, flexDirection: 'column',
-          }}
-          >
-            <View>
-              <TouchableOpacity
+    }
+    return (
+      <View style={styles.mainBg}>
+        <ScrollView>
+          <View style={{ padding: 20 }}>
+            <TouchableHighlight onPress={() => this.deletePhoto()}>
+              <Image
                 style={{
-                  backgroundColor: '#00ffea',
-                  borderRadius: 3,
-                  width: 80,
-                  height: 30,
-                  alignSelf: 'flex-end',
-                  marginRight: 20,
-                  padding: 3,
+                  width: 150, height: 150, padding: 5, transform: [{ rotate: '90deg' }], alignSelf: 'center',
                 }}
-                onPress={() => this.updateReview()}
-              >
-                <Text style={styles.reviewText}>update</Text>
-              </TouchableOpacity>
+                source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${locationId}`}/review/${`${reviewId}`}/photo` }}
+              />
+            </TouchableHighlight>
+            <Text style={styles.reviewHeader}>
+              {locationName}
+              {', '}
+              {' '}
+              {locationTown}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', padding: 20 }}>
+            <Text style={styles.reviewText}>
+              Overall:
+              {' '}
+            </Text>
+            <AirbnbRating
+              count={5}
+              defaultRating={overallRating}
+              size={15}
+              showRating={false}
+              style={styles.starRating}
+              onFinishRating={(overallRating) => this.setState({ overallRating })}
+            />
+          </View>
+          <View style={{ flexDirection: 'row', padding: 20 }}>
+            <Text style={styles.reviewText}>
+              Quality:
+              {' '}
+            </Text>
 
-              <TouchableHighlight onPress={() => this.deletePhoto()}>
-                <Image
-                  style={{
-                    width: 110, height: 110, padding: 5, borderRadius: 60, alignSelf: 'center',
-                  }}
-                  source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${this.state.location_id}` + '/review/' + `${this.state.review_id}` + '/photo' }}
-                />
-              </TouchableHighlight>
-              <Text style={styles.reviewHeader}>
-                {this.state.location_name}
-                {', '}
-                {' '}
-                {this.state.location_town}
-              </Text>
-            </View>
-            <Text style={styles.reviewText}>
-              Overall:{' '}
-              <AirbnbRating
-                count={5}
-                defaultRating={this.state.overall_rating}
-                size={15}
-                showRating={false}
-                style={styles.starRating}
-                onFinishRating={( overall_rating ) => this.setState({overall_rating})}
-              />
-            </Text>
-            <Text style={styles.reviewText}>
-              Quality:{' '}
-              <AirbnbRating
-                count={5}
-                defaultRating={this.state.quality_rating}
-                size={15}
-                style={styles.starRating}
-                showRating={false}
-                onFinishRating={( quality_rating ) => this.setState({quality_rating})}
-              />
-            </Text>
-            <Text style={styles.reviewText}>
-              Price:{' '}
-              <AirbnbRating
-                count={5}
-                defaultRating={this.state.price_rating}
-                size={15}
-                showRating={false}
-                style={styles.starRating}
-                onFinishRating={( price_rating ) => this.setState({price_rating})}
-
-              />
-            </Text>
-            <Text style={styles.reviewText}>
-              Hygeine:{' '}
-              <AirbnbRating
-                count={5}
-                defaultRating={this.state.clenliness_rating}
-                size={15}
-                showRating={false}
-                style={styles.starRating}
-                onFinishRating={( clenliness_rating ) => this.setState({clenliness_rating})}
-              />
-            </Text>
-            <TextInput
-              style={styles.reviewTextInput}
-              multiline
-              numberOfLines={5}
-              blurOnSubmit
-              onChangeText={( review_body ) => this.setState({review_body})}
-            >
-              {this.state.review_body}
-            </TextInput>
+            <AirbnbRating
+              count={5}
+              defaultRating={qualityRating}
+              size={15}
+              style={styles.starRating}
+              showRating={false}
+              onFinishRating={(qualityRating) => this.setState({ qualityRating })}
+            />
 
           </View>
-        </View>
-      );
-    }
+          <View style={{ flexDirection: 'row', padding: 20 }}>
+            <Text style={styles.reviewText}>
+              Price:
+              {' '}
+            </Text>
+            <AirbnbRating
+              count={5}
+              defaultRating={priceRating}
+              size={15}
+              showRating={false}
+              style={styles.starRating}
+              onFinishRating={(priceRating) => this.setState({ priceRating })}
+            />
+          </View>
+          <View style={{ flexDirection: 'row', padding: 20 }}>
+            <Text style={styles.reviewText}>
+              Hygeine:
+              {' '}
+            </Text>
+            <AirbnbRating
+              count={5}
+              defaultRating={clenlinessRating}
+              size={15}
+              showRating={false}
+              style={styles.starRating}
+              onFinishRating={(clenlinessRating) => this.setState({ clenlinessRating })}
+            />
+
+          </View>
+          <TextInput
+            style={styles.reviewTextInput}
+            multiline
+            numberOfLines={5}
+            blurOnSubmit
+            onChangeText={(reviewBody) => this.setState({ reviewBody })}
+          >
+            {reviewBody}
+          </TextInput>
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={() => this.updateReview()}
+          >
+            <Text style={styles.formTouchText}>update</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
   }
 }
+
+UpdateReviewScreen.propTypes = {
+  navigation: PropTypes.shape({
+    addListener: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    goBack: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default UpdateReviewScreen;

@@ -4,34 +4,40 @@ import React, { Component } from 'react';
 import {
   Text, View, StyleSheet, Image, TouchableOpacity,
 } from 'react-native';
-// import PropTypes from 'prop-types';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class HomeScreen extends Component {
   render() {
     const { navigation } = this.props;
     return (
-      <View style={styles.mainBg}>
+      <View style={homeScreenStyle.mainBg}>
 
         <View>
-          <Text style={styles.title}>Welcome to Coffida</Text>
+          <Text style={homeScreenStyle.title}>Welcome to Coffida</Text>
+          <Image
+            style={{
+              width: 180, height: 200, marginTop: 85, marginLeft: 60,
+            }}
+            source={{ uri: 'http://clipart-library.com/img/1695725.png' }}
+          />
         </View>
 
-        <View style={styles.buttonOrder}>
-          <View style={styles.buttonView}>
+        <View>
+          <View style={homeScreenStyle.buttonView}>
             <TouchableOpacity
-              style={styles.greenButton}
+              style={homeScreenStyle.greenButton}
               onPress={() => navigation.navigate('signup')}
             >
-              <Text style={styles.buttonText}>SIGN UP</Text>
+              <Text style={homeScreenStyle.buttonText}>SIGN UP</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.buttonView2}>
+
+          <View style={homeScreenStyle.buttonView2}>
             <TouchableOpacity
-              style={styles.buttonNoBg}
+              style={homeScreenStyle.buttonNoBg}
               onPress={() => navigation.navigate('login')}
             >
-              <Text style={styles.buttonText2}>LOGIN</Text>
+              <Text style={homeScreenStyle.buttonText2}>LOGIN</Text>
             </TouchableOpacity>
           </View>
 
@@ -42,19 +48,13 @@ class HomeScreen extends Component {
   }
 }
 
-// HomeScreen.propTypes = {
-//   navigation: PropTypes.shape({
-//     navigate: PropTypes.func.isRequired,
-//   }).isRequired,
-// };
-
-const styles = StyleSheet.create({
+const homeScreenStyle = StyleSheet.create({
 
   mainBg: {
     backgroundColor: '#001624',
     flex: 1,
-    flexDirection: 'column', // can be column (default), row, row-reverse, column-reverse
-    justifyContent: 'space-around', // can be flex-start (default), flex-end, center, space-between, space-around, space-evenly
+    flexDirection: 'column',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
 
@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: 30,
+    paddingLeft: 15,
+    marginTop: 15,
   },
   buttonText: {
     color: 'white',
@@ -89,10 +91,6 @@ const styles = StyleSheet.create({
   buttonText2: {
     color: '#00ffea',
     fontSize: 18,
-  },
-  tinyLogo: {
-    width: 50,
-    height: 50,
   },
 
 });

@@ -1,62 +1,18 @@
+/* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,
+  Text, View, TouchableOpacity, ActivityIndicator, TextInput, ScrollView, ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Filter from 'bad-words';
 import { AirbnbRating } from 'react-native-ratings';
+import PropTypes from 'prop-types';
+// import { checkAllFields } from './Utils';
+import styles from './styles';
 
 const filter = new Filter();
 
 filter.addWords('cakes', 'tea', 'cake');
-
-const styles = StyleSheet.create({
-
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-    flexDirection: 'column',
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  greenButton: {
-    borderRadius: 3,
-    backgroundColor: '#00ffea',
-    width: 120,
-    color: 'white',
-    margin: 20,
-
-  },
-  greenButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    height: 35,
-    paddingTop: 6,
-  },
-  formItem: {
-    padding: 20,
-    // marginTop: 10,
-  },
-  formLabel: {
-    fontSize: 15,
-    color: 'grey',
-    paddingBottom:10,
-  },
-  formInput: {
-    borderRadius: 3,
-    color: 'grey',
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
-    // marginTop: 5,
-  },
-
-});
 
 class AddReviewScreen extends Component {
   constructor(props) {
@@ -65,134 +21,180 @@ class AddReviewScreen extends Component {
     this.state = {
       locationName: '',
       locationTown: '',
-      overall_rating: '',
-      price_rating: '',
-      quality_rating: '',
-      clenliness_rating: '',
-      review_body: '',
-
+      locationId: 0,
+      tokenId: 0,
+      overallRating: '',
+      priceRating: '',
+      qualityRating: '',
+      clenlinessRating: '',
+      reviewBody: '',
+      isLoading: true,
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.checkLoggedIn();
+    const { navigation } = this.props;
+    this.unsubscribe = navigation.addListener('focus', () => {
+      this.getFieldsForScreen();
     });
   }
 
-  checkLoggedIn = async () => {
-    const locationName = await AsyncStorage.getItem('@location_name');
-    const locationTown = await AsyncStorage.getItem('@location_town');
-    this.setState({ locationName });
+  // get data from async storage and store in state to use later on
+  getFieldsForScreen = async () => {
+    // use multi get to retrieve variables
+    AsyncStorage.multiGet(['@location_name', '@location_town', '@location_id', '@session_token']).then((response) => {
+      const locationName = (response[0][1]);
+      const locationTown = (response[1][1]);
+      const locationId = (response[2][1]);
+      const tokenId = (response[3][1]);
+      this.setState({
+        locationName, locationTown, locationId, tokenId, isLoading: false,
+      });
+    });
   }
 
-    addReview = async () => {
-      const locationId = await AsyncStorage.getItem('@location_id');
-      const tokenId = await AsyncStorage.getItem('@session_token');
+  addReview = async () => {
+    const {
+      overallRating, priceRating, qualityRating, clenlinessRating, reviewBody, locationId, tokenId,
+    } = this.state;
+    const { navigation } = this.props;
 
-      const dataToSend = {
-        overall_rating: parseInt(this.state.overall_rating),
-        price_rating: parseInt(this.state.price_rating),
-        quality_rating: parseInt(this.state.quality_rating),
-        clenliness_rating: parseInt(this.state.clenliness_rating),
-        review_body: filter.clean(this.state.review_body),
-      };
-      console.log(dataToSend);
-
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review`,
-        {
-          method: 'POST',
-          headers:
+    // console.log(checkAllFields(this.state));
+    // checks all fields are complete
+    // if (checkAllFields(this.state)) {
+    // console.log("inside");
+    // store the users input into an object to send later
+    const dataToSend = {
+      overall_rating: parseInt(overallRating, 10),
+      price_rating: parseInt(priceRating, 10),
+      quality_rating: parseInt(qualityRating, 10),
+      clenliness_rating: parseInt(clenlinessRating, 10),
+      review_body: filter.clean(reviewBody, 10),
+    };
+      // post request to send
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review`,
+      {
+        method: 'POST',
+        headers:
           {
             'Content-Type': 'application/json',
             'X-Authorization': tokenId,
           },
-          body: JSON.stringify(dataToSend),
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('Addded!');
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
+        body: JSON.stringify(dataToSend),
+      })
+      .then(() => {
+        navigation.goBack(null);
+      })
+      .catch(() => {
+        ToastAndroid.show('There was an error, please try again!', ToastAndroid.SHORT);
+      });
+  }
+  //   return ToastAndroid.show('Please fill in all the fields!', ToastAndroid.SHORT);
+  // }
 
-    render() {
+  render() {
+    const {
+      priceRating, qualityRating, clenlinessRating, reviewBody, locationName, locationTown,
+    } = this.state;
+    const { isLoading, overallRating } = this.state;
+
+    if (!isLoading) {
       return (
         <ScrollView style={styles.mainBg}>
-          <Text style={styles.header}>{this.state.locationName}</Text>
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Overall Rating:</Text>
-            <Text style={styles.reviewText}>
+
+          <Text style={styles.title}>
+            {locationName}
+            {', '}
+            {locationTown}
+          </Text>
+
+          <View style={{ padding: 20 }}>
+            <Text style={styles.greyText}>Overall Rating:</Text>
+            <Text>
               <AirbnbRating
                 count={5}
-                defaultRating={this.state.overall_rating}
+                defaultRating={overallRating}
                 size={15}
                 showRating={false}
-                style={styles.starRating}
-                onFinishRating={(overall_rating) => this.setState({ overall_rating })}
+                onFinishRating={(overallRating) => this.setState({ overallRating })}
               />
             </Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Price Rating:</Text>
-            <Text style={styles.reviewText}>
+
+          <View style={{ padding: 20 }}>
+            <Text style={styles.greyText}>Price Rating:</Text>
+            <Text>
               <AirbnbRating
                 count={5}
-                defaultRating={this.state.price_rating}
+                defaultRating={priceRating}
                 size={15}
                 showRating={false}
-                style={styles.starRating}
-                onFinishRating={(price_rating) => this.setState({ price_rating })}
+                onFinishRating={(priceRating) => this.setState({ priceRating })}
               />
             </Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Quality Rating:</Text>
-            <Text style={styles.reviewText}>
+
+          <View style={{ padding: 20 }}>
+            <Text style={styles.greyText}>Quality Rating:</Text>
+            <Text>
               <AirbnbRating
                 count={5}
-                defaultRating={this.state.quality_rating}
+                defaultRating={qualityRating}
                 size={15}
                 showRating={false}
-                style={styles.starRating}
-                onFinishRating={(quality_rating) => this.setState({ quality_rating })}
+                onFinishRating={(qualityRating) => this.setState({ qualityRating })}
               />
             </Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Cleanliness Rating:</Text>
-            <Text style={styles.reviewText}>
+
+          <View style={{ padding: 20 }}>
+            <Text style={styles.greyText}>Cleanliness Rating:</Text>
+            <Text>
               <AirbnbRating
                 count={5}
-                defaultRating={this.state.clenliness_rating}
+                defaultRating={clenlinessRating}
                 size={15}
                 showRating={false}
-                style={styles.starRating}
-                onFinishRating={(clenliness_rating) => this.setState({ clenliness_rating })}
+                onFinishRating={(clenlinessRating) => this.setState({ clenlinessRating })}
               />
             </Text>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Review Body:</Text>
+
+          <View style={{ padding: 20 }}>
+            <Text style={styles.greyText}>Review Body:</Text>
             <TextInput
-              style={styles.formInput}
+              style={styles.greyInputText}
               multiline
               blurOnSubmit
-              onChangeText={(review_body) => this.setState({ review_body })}
-              value={this.state.review_body}
+              onChangeText={(reviewBody) => this.setState({ reviewBody })}
+              value={reviewBody}
             />
           </View>
+
           <TouchableOpacity style={styles.greenButton} onPress={() => this.addReview()}>
             <Text style={styles.greenButtonText}>Add</Text>
           </TouchableOpacity>
+
         </ScrollView>
       );
     }
+    return (
+      <View style={styles.mainBg}>
+        <ActivityIndicator
+          size="large"
+          color="#00ff00"
+          style={{ alignSelf: 'center' }}
+        />
+      </View>
+    );
+  }
 }
+
+AddReviewScreen.propTypes = {
+  navigation: PropTypes.shape({
+    addListener: PropTypes.func.isRequired,
+    goBack: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default AddReviewScreen;

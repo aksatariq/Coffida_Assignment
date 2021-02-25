@@ -1,20 +1,13 @@
-/* eslint-disable no-useless-concat */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable radix */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-console */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-else-return */
 import React, { Component } from 'react';
 import {
   Text, View, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback,
-  ToastAndroid, ActivityIndicator, FlatList, SafeAreaView,
+  ToastAndroid, ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { AirbnbRating } from 'react-native-ratings';
+import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
 
@@ -146,34 +139,16 @@ class LocationDetailsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      userData: [],
-      swipeoutBtns: [
-        {
-          text: 'Button',
-        },
-      ],
       userReviews: [],
       token: '',
-      user_id: 0,
-      overall_rating: '',
-      price_rating: '',
-      quality_rating: '',
-      clenliness_rating: '',
-      review_body: '',
-      orig_overall_rating: '',
-      orig_price_rating: '',
-      orig_quality_rating: '',
-      orig_clenliness_rating: '',
-      orig_review_body: '',
-      showFavourite: true,
-      showLike: true,
-      listViewData: [{}],
+      userId: 0,
 
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+    const { navigation } = this.props;
+    this.unsubscribe = navigation.addListener('focus', () => {
       this.checkLoggedin();
     });
   }
@@ -182,218 +157,177 @@ class LocationDetailsScreen extends Component {
     this.unsubscribe();
   }
 
-    checkLoggedin = async () => {
-      const token = await AsyncStorage.getItem('@session_token');
-      this.setState({ token });
+  checkLoggedin = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const userId = await AsyncStorage.getItem('@user_id');
 
-      if (token == null) {
-        this.props.navigation.navigate('home');
-      }
-      console.log('item received');
-      const userId = await AsyncStorage.getItem('@user_id');
-      console.log(userId);
-      this.setState({ user_id: userId });
+    this.setState({ token, userId });
 
-      this.getData();
-    }
+    this.getData();
+  }
 
-    getData = () => {
-      console.log('arrived');
-      console.log(this.state.user_id);
-      console.log(this.state.token);
+  getData = () => {
+    const { userId, token } = this.state;
 
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${this.state.user_id}`,
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userId}`,
+      {
+        method: 'GET',
+        headers:
         {
-          method: 'GET',
-          headers:
-          {
-            'X-Authorization': this.state.token,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } if (response.status === '400') {
-            throw new Error('Bad request!');
-          } else {
-            throw new Error('Something went wrong');
-          }
-        })
-        .then(async (responseJson) => {
-          console.log(responseJson.reviews);
-
-          this.setState({
-            userData: responseJson,
-            userReviews: responseJson.reviews,
-            isLoading: false,
-          });
-          await AsyncStorage.setItem('@userData', JSON.stringify(responseJson));
-        })
-
-        .catch((error) => {
-        // console.error(error);
-          ToastAndroid.show(error, ToastAndroid.SHORT);
+          'X-Authorization': token,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } if (response.status === '400') {
+          throw new Error('Bad request!');
+        } else {
+          throw new Error('Something went wrong');
+        }
+      })
+      .then(async (responseJson) => {
+        this.setState({
+          userReviews: responseJson.reviews,
+          isLoading: false,
         });
-    };
+        await AsyncStorage.setItem('@userData', JSON.stringify(responseJson));
+      })
 
-    updateReview = ({ data }) => {
-      this.props.navigation.navigate('updateReview');
-      this.props.navigation.navigate('updateReview', {
-        userId: this.state.user_id,
-        reviewId: data.item.review.review_id,
-        locationId: data.item.location.location_id,
+      .catch(() => {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       });
-    }
+  };
 
-    deleteReview = ({ data }) => {
-      console.log('deleteReview');
-      // console.log(this.state.token);
-      // console.log(item.review_id);
+  updateReview = ({ data }) => {
+    const { navigation } = this.props;
+    const { userId } = this.state;
+    navigation.navigate('updateReview', {
+      userId,
+      reviewId: data.item.review.review_id,
+      locationId: data.item.location.location_id,
+    });
+  }
 
-      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${data.item.location.location_id}/review/${data.item.review.review_id}`,
+  deleteReview = ({ data }) => {
+    const { token } = this.state;
+
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${data.item.location.location_id}/review/${data.item.review.review_id}`,
+      {
+        method: 'DELETE',
+        headers:
         {
-          method: 'DELETE',
-          headers:
-          {
-            'Content-Type': 'application/json',
-            'X-Authorization': this.state.token,
-          },
-        })
-        .then((response) => {
-          if (!response.ok) {
-            // get error message from body or default to response status
-            console.log(response);
-          }
-          console.log('Deleted!');
-          this.getData();
-        })
-        .catch((error) => {
-          console.error('There was an error!', error);
-        });
-    }
-
-    takePicture = async ({ data }) => {
-      console.log('hello');
-      console.log(data.item.review.review_id);
-      console.log(data.item.location.location_id);
-
-      // this.setId(/, reviewId);
-      this.props.navigation.navigate('takePicture', {
-        reviewId: data.item.review.review_id,
-        locationId: data.item.location.location_id,
+          'Content-Type': 'application/json',
+          'X-Authorization': token,
+        },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        }
+        this.getData();
+      })
+      .catch(() => {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       });
-    };
+  }
 
-    renderHeader = () => (
-      <View style={{ marginTop: 25 }}>
-        <Text style={styles.Header}>My Reviews:</Text>
-      </View>
-    )
+  takePicture = async ({ data }) => {
+    const { navigation } = this.props;
+    navigation.navigate('takePicture', {
+      reviewId: data.item.review.review_id,
+      locationId: data.item.location.location_id,
+    });
+  };
 
-    render() {
-      if (!this.state.isLoading) {
-        return (
-          <SwipeListView
-            style={styles.mainBg}
-            data={this.state.userReviews}
-            closeOnRowOpen
-            closeOnScroll
-            closeOnRowPress
-            keyExtractor={(item) => item.review.review_id.toString()}
-            renderItem={(data) => (
-              <View style={styles.rowFront}>
-                <View style={styles.row}>
-                  <Image
-                    style={{ width: 78, height: 123, backgroundColor: '#001624' }}
-                    source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${data.item.location.location_id}`}/review/${`${data.item.review.review_id}`}/photo?timestamp=${Date.now()}` }}
-                  />
-                  <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text onPress={() => this.updateReview({ data })} style={styles.reviewHeader}>
-                      {data.item.location.location_name}{', '} {data.item.location.location_town}
+  renderHeader = () => (
+    <View style={{ marginTop: 25 }}>
+      <Text style={styles.Header}>My Reviews:</Text>
+    </View>
+  )
+
+  render() {
+    const { isLoading, userReviews } = this.state;
+    if (!isLoading) {
+      return (
+        <SwipeListView
+          style={styles.mainBg}
+          data={userReviews.sort(
+            (a, b) => a.review.review_id.toString().localeCompare(b.review.review_id.toString()),
+          )}
+          closeOnRowOpen
+          closeOnScroll
+          closeOnRowPress
+          keyExtractor={(item) => item.review.review_id.toString()}
+          renderItem={(data) => (
+            <View style={styles.rowFront}>
+              <View style={styles.row}>
+                <Image
+                  style={{ width: 78, height: 123, backgroundColor: '#001624' }}
+                  source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${data.item.location.location_id}`}/review/${`${data.item.review.review_id}`}/photo?timestamp=${Date.now()}` }}
+                />
+                <View style={{ flex: 1, flexDirection: 'column' }}>
+                  <Text onPress={() => this.updateReview({ data })} style={styles.reviewHeader}>
+                    {data.item.location.location_name}
+                    {', '}
+                    {' '}
+                    {data.item.location.location_town}
+                  </Text>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+
+                    <Text style={styles.reviewInfo}>
+                      Overall:
                     </Text>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-
-                      <Text style={styles.reviewInfo}>
-                        Overall:
-                      </Text>
-                      <View style={{ marginTop: 10 }}>
-                        <AirbnbRating
-                          count={5}
-                          defaultRating={data.item.review.overall_rating}
-                          size={15}
-                          showRating={false}
-                        />
-                      </View>
+                    <View style={{ marginTop: 10 }}>
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={data.item.review.overall_rating}
+                        size={15}
+                        showRating={false}
+                      />
                     </View>
-
-                    <TouchableOpacity
-                      onPress={() => this.takePicture({ data })}
-                      style={styles.capture}
-                    >
-                      <MaterialCommunityIcons name="camera" size={23} />
-                    </TouchableOpacity>
                   </View>
+
+                  <TouchableOpacity
+                    onPress={() => this.takePicture({ data })}
+                    style={styles.capture}
+                  >
+                    <MaterialCommunityIcons name="camera" size={23} />
+                  </TouchableOpacity>
                 </View>
               </View>
-            )}
-            renderHiddenItem={(data) => (
-              <View style={{ padding: 20 }}>
-                <TouchableWithoutFeedback onPress={() => this.deleteReview({ data })}>
-                  <Text style={styles.reviewInfo}>Delete</Text>
-                </TouchableWithoutFeedback>
-              </View>
-            )}
-            leftOpenValue={75}
-            rightOpenValue={0}
-            ListHeaderComponent={this.renderHeader()}
-
-          />
-        );
-      } else {
-        return (
-          <View style={styles.mainBg}>
-            <ActivityIndicator
-              size="large"
-              color="#00ff00"
-              style={{ alignSelf: 'center' }}
-            />
-          </View>
-        );
-      }
+            </View>
+          )}
+          renderHiddenItem={(data) => (
+            <View style={{ padding: 20 }}>
+              <TouchableWithoutFeedback onPress={() => this.deleteReview({ data })}>
+                <Text style={styles.reviewInfo}>Delete</Text>
+              </TouchableWithoutFeedback>
+            </View>
+          )}
+          leftOpenValue={75}
+          rightOpenValue={0}
+          ListHeaderComponent={this.renderHeader()}
+        />
+      );
     }
+    return (
+      <View style={styles.mainBg}>
+        <ActivityIndicator
+          size="large"
+          color="#00ff00"
+          style={{ alignSelf: 'center' }}
+        />
+      </View>
+    );
+  }
 }
 
+LocationDetailsScreen.propTypes = {
+  navigation: PropTypes.shape({
+    addListener: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 export default LocationDetailsScreen;
-// data={this.state.userReviews}
-// keyExtractor={(item) => item.review.review_id.toString()}
-// renderItem={({ item }) => (
-//   <View style={styles.row}>
-//     <Image
-//       style={{ width: 78, height: 123 }}
-//       source={{ uri: 'http://10.0.2.2:3333/api/1.0.0/location/' + `${item.location.location_id}` + '/review/' + `${item.review.review_id}` + '/photo' }}
-//     />
-//     <View style={{ flex: 1, flexDirection: 'column' }}>
-//       <Text style={styles.reviewHeader}>
-//         {item.location.location_name}{', '} {item.location.location_town}
-//       </Text>
-//       <Text style={styles.reviewInfo}>Overall: {item.review.overall_rating}{' | '}Quality: {item.review.quality_rating}{' | '}Price: {item.review.price_rating}{' | '}Hygeine: {item.review.clenliness_rating}</Text>
-//       <Text style={styles.reviewInfo}>{item.review.review_body}</Text>
-
-//       {/* <TouchableWithoutFeedback onPress={() => this.deleteReview({ item })}>
-//         <Text style={styles.formTouchText}>DELETE</Text>
-//       </TouchableWithoutFeedback>
-//       <TouchableWithoutFeedback onPress={() => this.updateReview({ item })}>
-//         <Text style={styles.formTouchText}>UPDATE</Text>
-//       </TouchableWithoutFeedback> */}
-//       <TouchableOpacity
-//         onPress={() => this.takePicture({ item })}
-//         style={styles.capture}
-//       >
-//         <MaterialCommunityIcons name="camera" size={23} />
-//       </TouchableOpacity>
-//     </View>
-//   </View>
-// )}
-// ListHeaderComponent={this.renderHeader()}
-
-// />

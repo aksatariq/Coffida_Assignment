@@ -1,13 +1,7 @@
-/* eslint-disable no-else-return */
-/* eslint-disable camelcase */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable eqeqeq */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-console */
+/* eslint-disable no-shadow */
 import React, { Component } from 'react';
 import {
-  Text, TextInput, View, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, ToastAndroid,
+  Text, TextInput, View, ActivityIndicator, ScrollView, TouchableOpacity, ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
@@ -18,22 +12,23 @@ class SettingsScreen extends Component {
     super(props);
     this.state = {
       token: '',
-      id: '',
+      userId: '',
       email: '',
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
       password: '',
-      confirm_password: '',
-      orig_email: '',
-      orig_first_name: '',
-      orig_last_name: '',
+      confirmPassword: '',
+      origEmail: '',
+      origFirstName: '',
+      origLastName: '',
       isLoading: true,
     };
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.checkLoggedin();
+    const { navigation } = this.props;
+    this.unsubscribe = navigation.addListener('focus', () => {
+      this.getFields();
     });
   }
 
@@ -41,233 +36,215 @@ class SettingsScreen extends Component {
     this.unsubscribe();
   }
 
-    checkLoggedin = async () => {
-      const tokenId = await AsyncStorage.getItem('@session_token');
+  getFields = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const userId = await AsyncStorage.getItem('@user_id');
+    const { navigation } = this.props;
+    this.setState({ token, userId });
 
-      // check if token exists
-      if (tokenId != null) {
-        // get the user id
-        const userId = await AsyncStorage.getItem('@user_id');
+    // navigate to settings page
+    navigation.navigate('settings');
 
-        // store the token
-        this.setState({ token: tokenId });
-        this.setState({ id: userId });
+    // get the data to display on page
+    this.getData();
+  }
 
-        // navigate to settings page
-        this.props.navigation.navigate('settings');
-
-        // get the data to display on page
-        this.getData();
-      }
-    }
-
-    getData = () => {
-      console.log('getting data...');
-      // eslint-disable-next-line prefer-template
-      return fetch('http://10.0.2.2:3333/api/1.0.0/user/' + this.state.id,
-        {
-          headers: {
-            'X-Authorization': this.state.token,
-          },
-        })
-        .then((response) => {
-          console.log(response.status);
-
-          if (response.status === 200) {
-            return response.json();
-          } if (response.status === '400') {
-            throw new Error('Invalid Email or Password!');
-          } else {
-            throw new Error('Something went wrong');
-          }
-        })
-        .then(async (responseJson) => {
-          this.setState({ orig_email: responseJson.email });
-          this.setState({ orig_first_name: responseJson.first_name });
-          this.setState({ orig_last_name: responseJson.last_name });
-
-          this.setState({ email: responseJson.email });
-          this.setState({ first_name: responseJson.first_name });
-          this.setState({
-            last_name: responseJson.last_name,
-            isLoading: false,
-          });
-
-          this.props.navigation.navigate('main');
-        })
-
-        .catch((error) => {
-          console.error(error);
-          ToastAndroid.show(error, ToastAndroid.SHORT);
+  getData = () => {
+    const { userId, token } = this.state;
+    const { navigation } = this.props;
+    return fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userId}`,
+      {
+        headers: {
+          'X-Authorization': token,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        return ToastAndroid.show('Something went wrong!', ToastAndroid.SHORT);
+      })
+      .then(async (responseJson) => {
+        this.setState({ origEmail: responseJson.email });
+        this.setState({ origFirstName: responseJson.first_name });
+        this.setState({ origLastName: responseJson.last_name });
+        this.setState({ email: responseJson.email });
+        this.setState({ firstName: responseJson.first_name });
+        this.setState({
+          lastName: responseJson.last_name,
+          isLoading: false,
         });
-    }
 
-    logout = async () => fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
+        navigation.navigate('main');
+      })
+
+      .catch(() => {
+        ToastAndroid.show('Something went wrong!', ToastAndroid.SHORT);
+      });
+  }
+
+  logout = async () => {
+    const { token } = this.state;
+    const { navigation } = this.props;
+    return fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
       method: 'POST',
       headers: {
-        'X-Authorization': this.state.token,
+        'X-Authorization': token,
       },
     })
       .then((response) => {
         if (response.status === 200) {
-          this.state.token = '';
-          this.props.navigation.navigate('home');
+          this.setState({ token: '' });
+          navigation.navigate('home');
           AsyncStorage.removeItem('@session_token');
         }
       })
-      .catch((error) => {
-        console.log(error);
-      })
+      .catch(() => {
+        ToastAndroid.show('Something went wrong!', ToastAndroid.SHORT);
+      });
+  }
 
-    async updateUser() {
-      const toSend = {};
-      // eslint-disable-next-line prefer-const
-      let sendBool = true;
+  async updateUser() {
+    const toSend = {};
+    const {
+      email, origEmail, firstName, origFirstName, lastName, origLastName, userId,
+      password, confirmPassword, token,
+    } = this.state;
+    const sendBool = true;
 
-      if (this.state.email != this.state.orig_email) {
-        toSend.email = this.state.email;
-        // eslint-disable-next-line no-unused-expressions
-        sendBool === true;
-        console.log('here');
-      }
-
-      if (this.state.first_name != this.state.orig_first_name) {
-        toSend.first_name = this.state.first_name;
-        sendBool === true;
-        console.log('here');
-      }
-
-      if (this.state.last_name != this.state.orig_last_name) {
-        toSend.last_name = this.state.last_name;
-        sendBool === true;
-      }
-
-      if (this.state.password == this.state.confirm_password && this.state.password != '') {
-        toSend.password = this.state.password;
-        sendBool === true;
-      }
-
-      console.log(toSend);
-      console.log(sendBool);
-
-      // check to see if any changes made
-      if (sendBool == true) {
-        // send PATCH request to api
-        try {
-          // eslint-disable-next-line prefer-template
-          const response = await fetch('http://10.0.2.2:3333/api/1.0.0/user/' + this.state.id,
-            {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': this.state.token,
-              },
-              body: JSON.stringify(toSend),
-            });
-          // check the response status we get back
-          if (response.status == 200) {
-            ToastAndroid.show('Details updated', ToastAndroid.SHORT);
-          } else if (response.status == 400) {
-            throw new Error('Failed Validation');
-          } else {
-            throw new Error('Failed to update, please try again');
-          }
-        } catch (error) {
-          console.error(error);
-          ToastAndroid.show(error, ToastAndroid.SHORT);
-        }
-      }
-      ToastAndroid.show('You have not made any changes!', ToastAndroid.SHORT);
+    if (email !== origEmail) {
+      toSend.email = email;
+      // sendBool === true;
     }
 
-    render() {
-      if (this.state.isLoading) {
-        return (
-          <View style={styles.mainBg}>
-            <ActivityIndicator
-              size="large"
-              color="#00ff00"
-              style={{ alignSelf: 'center' }}
+    if (firstName !== origFirstName) {
+      toSend.first_name = firstName;
+      // sendBool === true;
+    }
+
+    if (lastName !== origLastName) {
+      toSend.last_name = lastName;
+      // sendBool === true;
+    }
+
+    if (password === confirmPassword && password !== '') {
+      toSend.password = password;
+      // sendBool === true;
+    }
+
+    // check to see if any changes made
+    if (sendBool === true) {
+      // send PATCH request to api
+      try {
+        const response = await fetch(`http://10.0.2.2:3333/api/1.0.0/user/${userId}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token,
+            },
+            body: JSON.stringify(toSend),
+          });
+        // check the response status we get back
+        if (response.status === 200) {
+          ToastAndroid.show('Details updated', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+      }
+    }
+  }
+
+  render() {
+    const {
+      isLoading, firstName, lastName, email, password, confirmPassword,
+    } = this.state;
+    if (isLoading) {
+      return (
+        <View style={styles.mainBg}>
+          <ActivityIndicator
+            size="large"
+            color="#00ff00"
+            style={{ alignSelf: 'center' }}
+          />
+        </View>
+      );
+    }
+    return (
+
+      <View style={styles.mainBg}>
+        <ScrollView>
+          <View style={styles.formItem}>
+            <Text style={styles.title}>Manage your account</Text>
+          </View>
+
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>First Name:</Text>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(firstName) => this.setState({ firstName })}
+              value={firstName}
             />
           </View>
-        );
-      } else {
-        return (
 
-          <View style={styles.mainBg}>
-            <ScrollView>
-              <View style={styles.formItem}>
-                <Text style={styles.title}>Manage your account</Text>
-              </View>
-
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>First Name:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(first_name) => this.setState({ first_name })}
-                  value={this.state.first_name}
-                />
-              </View>
-
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Last Name:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(last_name) => this.setState({ last_name })}
-                  value={this.state.last_name}
-                />
-              </View>
-
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Email:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(email) => this.setState({ email })}
-                  value={this.state.email}
-                />
-              </View>
-
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Password:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(password) => this.setState({ password })}
-                  value={this.state.password}
-                />
-              </View>
-
-              <View style={styles.formItem}>
-                <Text style={styles.formLabel}>Confirm Password:</Text>
-                <TextInput
-                  style={styles.formInput}
-                  onChangeText={(confirm_password) => this.setState({ confirm_password })}
-                  value={this.state.confirm_password}
-                />
-              </View>
-
-              <View style={styles.formItem}>
-                <TouchableOpacity
-                  style={styles.formTouch}
-                  onPress={() => this.updateUser()}
-                >
-                  <Text style={styles.formTouchText}>update</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.formItem}>
-                <TouchableOpacity
-                  style={styles.formTouch}
-                  onPress={() => this.logout()}
-                >
-                  <Text style={styles.formTouchText}>logout</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Last Name:</Text>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(lastName) => this.setState({ lastName })}
+              value={lastName}
+            />
           </View>
 
-        );
-      }
-    }
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Email:</Text>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(email) => this.setState({ email })}
+              value={email}
+            />
+          </View>
+
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Password:</Text>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(password) => this.setState({ password })}
+              value={password}
+            />
+          </View>
+
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Confirm Password:</Text>
+            <TextInput
+              style={styles.formInput}
+              onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+              value={confirmPassword}
+            />
+          </View>
+
+          <View style={styles.formItem}>
+            <TouchableOpacity
+              style={styles.formTouch}
+              onPress={() => this.updateUser()}
+            >
+              <Text style={styles.formTouchText}>update</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.formItem}>
+            <TouchableOpacity
+              style={styles.formTouch}
+              onPress={() => this.logout()}
+            >
+              <Text style={styles.formTouchText}>logout</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+
+    );
+  }
 }
 
 SettingsScreen.propTypes = {

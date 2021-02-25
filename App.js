@@ -16,7 +16,6 @@ import LoginScreen from './components/LoginPage';
 import MainScreen from './components/MainScreen';
 import SettingsScreen from './components/SettingsScreen';
 import SearchScreen from './components/SearchScreen';
-import LocationScreen from './components/LocationDetailsScreen';
 import LocationReviews from './components/LocationReviews';
 import AddReviewScreen from './components/AddReview';
 import UpdateReviewScreen from './components/UpdateReview';

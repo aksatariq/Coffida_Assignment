@@ -8,6 +8,7 @@ module.exports = {
     "classes":true
   },
   "rules": {
-      "react/jsx-filename-extension": ["error", {"extensions" : [".js", ".jxs"]}],
+      "react/jsx-filename-extension": ["error", {"extensions" : [".js", ".jxs"]}], 
+      "no-shadow": [2, {"builtinGlobals": false, "hoist": "functions", "allow": []}]
   }
 };
