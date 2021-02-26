@@ -1,4 +1,4 @@
-CoffiDa Application
+# Coffida Application #
 
 GitHub repo:https://github.com/aksatariq/Coffida_Assignment 
 Style Guide: Airbnb
