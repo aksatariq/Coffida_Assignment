@@ -1,6 +1,6 @@
 # CoffiDa Mobile Application
 
-Link to GitHub repo for submission: <https://github.com/aksatariq/Coffida_Assignment> (for submission purposes only)
+Link to GitHub repo for submission: <https://github.com/aksatariq/Coffida_Assignment>
 
 Style guide: Airbnb
 
@@ -8,45 +8,45 @@ Style guide: Airbnb
 
 All the endpoints required for the assingment have been completed and appropiate error handling has been done.
 
-User Management
+## User Management
 
-•	Add new user
+* Add new user
 
-•	Login to account
+* Login to account
 
-•	Get user information
+* Get user information
 
-•	Logout of account
+* Logout of account
 
-•	Update user information
+* Update user information
 
-Location Management
+## Location Management
 
-•	Find location
+* Find location
 
-•	Favourite a location
+* Favourite a location
 
-•	Remove from favourites
+* Remove from favourites
 
-•	Get location information
+* Get location information
 
-•	Add new review
+* Add new review
 
-•	Like Review
+* Like Review
 
-•	Remove like from review 
+* Remove like from review 
 
 Location Reviews
 
-•	Get a photo for reviews
+* Get a photo for reviews
 
-•	Add photo for review
+* Add photo for review
 
-•	Delete review
+* Delete review
 
-•	Update review
+* Update review
 
-•	Delete photo from review
+* Delete photo from review
 
 ## Extension tasks
 
