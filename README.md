@@ -1,7 +1,7 @@
 # Coffida Application #
 
-GitHub repo:https://github.com/aksatariq/Coffida_Assignment 
-Style Guide: Airbnb
+## GitHub repo:https://github.com/aksatariq/Coffida_Assignment  ##
+## Style Guide: Airbnb
 
 
 Endpoints implemented, with appropiate error handling.
