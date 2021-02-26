@@ -11,7 +11,7 @@ import SwipeUpDown from 'react-native-swipe-up-down';
 import Geocoder from 'react-native-geocoding';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const mapStyles = StyleSheet.create({
   reviewInfo: {

@@ -7,8 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Filter from 'bad-words';
 import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
-import { checkAllFields } from './Utils';
-import styles from './styles';
+import { checkAllFields } from '../Utilities/Utils';
+import styles from '../Styles/styles';
 
 const filter = new Filter();
 

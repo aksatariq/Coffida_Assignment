@@ -11,7 +11,7 @@ import { AirbnbRating } from 'react-native-ratings';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Filter from 'bad-words';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const filter = new Filter();
 

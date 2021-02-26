@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const locationReviewStyles = StyleSheet.create({
   likeText: {

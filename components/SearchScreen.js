@@ -10,7 +10,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { AirbnbRating } from 'react-native-ratings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const searchStyles = StyleSheet.create({
 

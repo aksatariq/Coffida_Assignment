@@ -4,7 +4,7 @@ import {
   Text, TextInput, View, StyleSheet, ScrollView, TouchableOpacity, ToastAndroid,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { checkAllFields } from './Utils';
+import { checkAllFields } from '../Utilities/Utils';
 
 const styles = StyleSheet.create({
 

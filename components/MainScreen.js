@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const myReviewsStyle = StyleSheet.create({
   capture: {
@@ -26,8 +26,7 @@ const myReviewsStyle = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-
-  }
+  },
 
 });
 

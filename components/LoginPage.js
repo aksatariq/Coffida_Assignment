@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../Styles/styles';
 
 const loginStyles = StyleSheet.create({
 

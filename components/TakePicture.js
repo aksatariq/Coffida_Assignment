@@ -5,7 +5,7 @@
 /* eslint-disable no-use-before-define */
 import React, { Component } from 'react';
 import {
-  View, Button, Alert, StyleSheet,
+  View, Button, StyleSheet,
 } from 'react-native';
 // import PropTypes from 'prop-types';
 import { RNCamera } from 'react-native-camera';
