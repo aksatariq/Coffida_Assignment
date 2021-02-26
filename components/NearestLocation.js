@@ -11,25 +11,9 @@ import SwipeUpDown from 'react-native-swipe-up-down';
 import Geocoder from 'react-native-geocoding';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './styles';
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    flex: 1,
-    ...StyleSheet.absoluteFillObject,
-  },
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-  },
+const mapStyles = StyleSheet.create({
   reviewInfo: {
     fontSize: 15,
     color: 'black',
@@ -44,22 +28,6 @@ const styles = StyleSheet.create({
     bottom: 40,
     backgroundColor: 'transparent',
   },
-  containerHeader: {
-    flex: 1,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
-    backgroundColor: 'blue',
-  },
-  headerContent: {
-    marginTop: 0,
-    backgroundColor: 'grey',
-  },
-  Modal: {
-    backgroundColor: 'grey',
-    marginTop: 100,
-  },
   textContent: {
     width: 200,
     alignItems: 'center',
@@ -70,9 +38,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#696969',
     textAlign: 'center',
     fontSize: 15,
-
   },
-  card: {
+  locationCard: {
     elevation: 2,
     backgroundColor: '#FFF',
     marginHorizontal: 10,
@@ -86,20 +53,20 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 5,
   },
-  cardImage: {
+  locationCardImage: {
     flex: 3,
     width: 80,
     marginTop: 20,
     height: 30,
     alignSelf: 'center',
   },
-  cardtitle: {
+  locationCardTitle: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#444',
     paddingTop: 5,
   },
-  cardDescription: {
+  locationCardDescription: {
     fontSize: 15,
     color: '#444',
   },
@@ -176,7 +143,6 @@ class NearestLocation extends Component {
   findCoordinates() {
     const { locationPermission } = this.state;
     if (!locationPermission) {
-      // console.log('asking for permission...');
       this.state.locationPermission = requestLocationPermission();
     }
     Geolocation.getCurrentPosition((position) => {
@@ -184,8 +150,6 @@ class NearestLocation extends Component {
         location: {
           longitude: position.coords.longitude,
           latitude: position.coords.latitude,
-          // longitude: -2.242631,
-          // latitude: 53.480759,
         },
       });
       this.getAllLocations();
@@ -287,21 +251,21 @@ class NearestLocation extends Component {
             ))
           }
         </MapView>
-        <Animated.ScrollView horizontal scrollEventThrottle={1} style={styles.overlay}>
+        <Animated.ScrollView horizontal scrollEventThrottle={1} style={mapStyles.overlay}>
           {
             distances.map((marker) => (
-              <View key={marker.location_id} style={styles.card}>
-                <Image source={{ uri: marker.photo_path }} style={styles.cardImage} />
-                <View style={styles.textContent}>
-                  <Text numberOfLines={1} style={styles.cardtitle}>
+              <View key={marker.location_id} style={mapStyles.locationCard}>
+                <Image source={{ uri: marker.photo_path }} style={mapStyles.locationCardImage} />
+                <View style={mapStyles.textContent}>
+                  <Text numberOfLines={1} style={mapStyles.locationCardTitle}>
                     {' '}
                     {marker.location_name}
                   </Text>
-                  <Text numberOfLines={1} style={styles.carddescription}>
+                  <Text numberOfLines={1} style={mapStyles.locationCardDescription}>
                     {' '}
                     {marker.avg_overall_rating}
                   </Text>
-                  <Text numberOfLines={1} style={styles.carddescription}>
+                  <Text numberOfLines={1} style={mapStyles.locationCardDescription}>
                     {' '}
                     {marker.distance}
                     {' '}
@@ -316,7 +280,7 @@ class NearestLocation extends Component {
         </Animated.ScrollView>
 
         <Text
-          style={styles.searchBar}
+          style={mapStyles.searchBar}
           onPress={() => this.swipeUpDownRef.showFull()}
         >
           Search for coffee locations
@@ -340,7 +304,7 @@ class NearestLocation extends Component {
                 useOnPlatform: 'web',
               }}
             />
-            )} // Pass props component when show full
+            )}
           // eslint-disable-next-line no-return-assign
           hasRef={(ref) => (this.swipeUpDownRef = ref)}
           style={{ height: 20, backgroundColor: '#696969', opacity: 0.9 }}

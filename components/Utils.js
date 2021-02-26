@@ -5,7 +5,7 @@
 export const checkAllFields = (obj) => {
   var isNull = true;
   for (const key in obj) {
-    if (obj[key] == null || obj[key] == '') {
+    if (obj[key] === null || obj[key] === '') {
       isNull = false;
       return isNull;
     }

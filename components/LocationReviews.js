@@ -8,68 +8,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
+import styles from './styles';
 
-const styles = StyleSheet.create({
-
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-    flexDirection: 'column',
-  },
-  reviewText: {
-    fontSize: 15,
-    color: 'grey',
-    flexShrink: 1,
-    paddingBottom: 15,
-    width: 100,
-  },
-  reviewTextInput: {
-    fontSize: 15,
-    color: 'grey',
-    paddingBottom: 15,
-
-  },
-  reviewHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-    marginTop: 25,
-    marginBottom: 10,
-  },
-
-  favouriteIcon: {
-    color: '#00ffea',
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#00ffea',
-    width: 33,
-    height: 33,
-    padding: 7,
-    overflow: 'hidden',
-    alignSelf: 'center',
-    marginTop: -90,
-    marginRight: 20,
-
-  },
-  favouriteText: {
+const locationReviewStyles = StyleSheet.create({
+  likeText: {
     color: '#00ffea',
     fontSize: 14,
     alignSelf: 'center',
     marginRight: 10,
   },
-  starRating: {
-    paddingVertical: -100,
-  },
-
   likeIcon: {
-
     color: '#00ffea',
     width: 40,
     height: 40,
     padding: 10,
     alignSelf: 'center',
-    overflow: 'hidden',
   },
 
 });
@@ -224,7 +177,7 @@ class LocationDetailsScreen extends Component {
 
   renderHeader = () => (
     <View style={{ padding: 10 }}>
-      <Text style={styles.reviewHeader}>
+      <Text style={styles.title}>
         {this.state.locationData.location_name}
         {', '}
         {' '}
@@ -259,11 +212,11 @@ class LocationDetailsScreen extends Component {
             keyExtractor={(item) => item.review_id.toString()}
             renderItem={({ item }) => (
               <View style={{ padding: 20, marginTop: -30 }}>
-                <Text style={styles.reviewTextInput}>
+                <Text style={styles.greyInputTextNoBorder}>
                   {item.review_body}
                 </Text>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     Overall:
                     {' '}
                   </Text>
@@ -272,11 +225,10 @@ class LocationDetailsScreen extends Component {
                     defaultRating={item.overall_rating}
                     size={15}
                     showRating={false}
-                    style={styles.starRating}
                   />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     Quality:
                     {' '}
                   </Text>
@@ -284,12 +236,11 @@ class LocationDetailsScreen extends Component {
                     count={5}
                     defaultRating={item.quality_rating}
                     size={15}
-                    style={styles.starRating}
                     showRating={false}
                   />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     Price:
                     {' '}
                   </Text>
@@ -298,11 +249,10 @@ class LocationDetailsScreen extends Component {
                     defaultRating={item.price_rating}
                     size={15}
                     showRating={false}
-                    style={styles.starRating}
                   />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     Hygeine:
                     {' '}
                   </Text>
@@ -312,14 +262,13 @@ class LocationDetailsScreen extends Component {
                     defaultRating={item.clenliness_rating}
                     size={15}
                     showRating={false}
-                    style={styles.starRating}
                   />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     Likes:
                   </Text>
-                  <Text style={styles.reviewText}>
+                  <Text style={styles.greyText}>
                     {' '}
                     {item.likes}
                   </Text>
@@ -345,11 +294,11 @@ class LocationDetailsScreen extends Component {
                     >
                       <MaterialCommunityIcons
                         name="thumb-up"
-                        style={styles.likeIcon}
+                        style={locationReviewStyles.likeIcon}
                         color="#00ffea"
                         size={19}
                       />
-                      <Text style={styles.favouriteText}>
+                      <Text style={locationReviewStyles.likeText}>
                         Unlike this review?
                       </Text>
                     </TouchableOpacity>
@@ -372,11 +321,11 @@ class LocationDetailsScreen extends Component {
                     >
                       <MaterialCommunityIcons
                         name="thumb-up-outline"
-                        style={styles.likeIcon}
+                        style={locationReviewStyles.likeIcon}
                         color="#00ffea"
                         size={19}
                       />
-                      <Text style={styles.favouriteText}>
+                      <Text style={locationReviewStyles.likeText}>
                         Like this review?
                       </Text>
                     </TouchableOpacity>

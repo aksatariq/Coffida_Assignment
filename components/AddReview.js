@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Filter from 'bad-words';
 import { AirbnbRating } from 'react-native-ratings';
 import PropTypes from 'prop-types';
-// import { checkAllFields } from './Utils';
+import { checkAllFields } from './Utils';
 import styles from './styles';
 
 const filter = new Filter();
@@ -59,38 +59,36 @@ class AddReviewScreen extends Component {
     } = this.state;
     const { navigation } = this.props;
 
-    // console.log(checkAllFields(this.state));
     // checks all fields are complete
-    // if (checkAllFields(this.state)) {
-    // console.log("inside");
-    // store the users input into an object to send later
-    const dataToSend = {
-      overall_rating: parseInt(overallRating, 10),
-      price_rating: parseInt(priceRating, 10),
-      quality_rating: parseInt(qualityRating, 10),
-      clenliness_rating: parseInt(clenlinessRating, 10),
-      review_body: filter.clean(reviewBody, 10),
-    };
+    if (checkAllFields(this.state)) {
+      // store the users input into an object to send later
+      const dataToSend = {
+        overall_rating: parseInt(overallRating, 10),
+        price_rating: parseInt(priceRating, 10),
+        quality_rating: parseInt(qualityRating, 10),
+        clenliness_rating: parseInt(clenlinessRating, 10),
+        review_body: filter.clean(reviewBody, 10),
+      };
       // post request to send
-    return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review`,
-      {
-        method: 'POST',
-        headers:
+      return fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review`,
+        {
+          method: 'POST',
+          headers:
           {
             'Content-Type': 'application/json',
             'X-Authorization': tokenId,
           },
-        body: JSON.stringify(dataToSend),
-      })
-      .then(() => {
-        navigation.goBack(null);
-      })
-      .catch(() => {
-        ToastAndroid.show('There was an error, please try again!', ToastAndroid.SHORT);
-      });
+          body: JSON.stringify(dataToSend),
+        })
+        .then(() => {
+          navigation.goBack(null);
+        })
+        .catch(() => {
+          ToastAndroid.show('There was an error, please try again!', ToastAndroid.SHORT);
+        });
+    }
+    return ToastAndroid.show('Please fill in all the fields!', ToastAndroid.SHORT);
   }
-  //   return ToastAndroid.show('Please fill in all the fields!', ToastAndroid.SHORT);
-  // }
 
   render() {
     const {

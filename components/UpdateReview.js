@@ -11,18 +11,14 @@ import { AirbnbRating } from 'react-native-ratings';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Filter from 'bad-words';
 import PropTypes from 'prop-types';
+import styles from './styles';
 
 const filter = new Filter();
 
 filter.addWords('cakes', 'tea', 'cake');
 
-const styles = StyleSheet.create({
+const updateReviewStyles = StyleSheet.create({
 
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-    flexDirection: 'column',
-  },
   reviewText: {
     fontSize: 15,
     color: 'grey',
@@ -32,32 +28,7 @@ const styles = StyleSheet.create({
   reviewTextInput: {
     fontSize: 15,
     color: 'grey',
-    marginTop: -10,
-    marginLeft: -25,
-  },
-  reviewHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-    marginTop: 10,
-  },
-
-  updateButton: {
-    backgroundColor: '#00ffea',
-    borderRadius: 3,
-    padding: 12,
-    width: 290,
-    alignSelf: 'center',
-    marginBottom: 20,
-
-  },
-  formTouchText: {
-    fontSize: 15,
-    color: 'white',
-    flexShrink: 1,
-    lineHeight: 27,
-    textAlign: 'center',
+    marginLeft: 20,
   },
 });
 
@@ -86,7 +57,7 @@ class UpdateReviewScreen extends Component {
   componentDidMount() {
     const { navigation } = this.props;
     this.unsubscribe = navigation.addListener('focus', () => {
-      this.checkLoggedin();
+      this.getFields();
     });
   }
 
@@ -94,18 +65,15 @@ class UpdateReviewScreen extends Component {
     this.unsubscribe();
   }
 
-    checkLoggedin = async () => {
-      const token = await AsyncStorage.getItem('@session_token');
-      this.setState({ token });
+  getFields = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    this.state.reviewId = this.props.route.params.reviewId;
+    this.state.userId = this.props.route.params.userId;
+    this.state.locationId = this.props.route.params.locationId;
+    this.setState({ token });
 
-      if (token !== null) {
-        this.state.reviewId = this.props.route.params.reviewId;
-        this.state.userId = this.props.route.params.userId;
-        this.state.locationId = this.props.route.params.locationId;
-        this.state.token = await AsyncStorage.getItem('@session_token');
-      }
-      this.getData();
-    }
+    this.getData();
+  }
 
   getData = () => {
     const { userId, token } = this.state;
@@ -120,11 +88,8 @@ class UpdateReviewScreen extends Component {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
-        } if (response.status === '400') {
-          throw new Error('Bad request!');
-        } else {
-          throw new Error('Something went wrong');
         }
+        return ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       })
       .then(async (responseJson) => {
         this.setState({
@@ -184,27 +149,31 @@ class UpdateReviewScreen extends Component {
       toSend.clenliness_rating = clenlinessRating;
     }
 
-    if (reviewBody !== userReviews.review_body) {
+    if (reviewBody !== userReviews.review_body && reviewBody !== '') {
       toSend.review_body = filter.clean(reviewBody);
     }
-    try {
-      const response = await fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review/${reviewId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Authorization': token,
-          },
-          body: JSON.stringify(toSend),
-        });
-      const { navigation } = this.props;
-      if (!response.ok) {
-        // get error message from body or default to response status
+
+    if (reviewBody === '') {
+      ToastAndroid.show('Please fill in all fields!', ToastAndroid.SHORT);
+    } else {
+      try {
+        const response = await fetch(`http://10.0.2.2:3333/api/1.0.0/location/${locationId}/review/${reviewId}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token,
+            },
+            body: JSON.stringify(toSend),
+          });
+        const { navigation } = this.props;
+        if (!response.ok) {
+          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+        }
+        navigation.goBack(null);
+      } catch (e) {
         ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       }
-      navigation.goBack(null);
-    } catch (e) {
-      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
     }
   }
 
@@ -236,6 +205,7 @@ class UpdateReviewScreen extends Component {
           // get error message from body or default to response status
           ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
         }
+        this.getData();
       })
       .catch(() => {
         ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
@@ -267,10 +237,10 @@ class UpdateReviewScreen extends Component {
                 style={{
                   width: 150, height: 150, padding: 5, transform: [{ rotate: '90deg' }], alignSelf: 'center',
                 }}
-                source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${locationId}`}/review/${`${reviewId}`}/photo` }}
+                source={{ uri: `http://10.0.2.2:3333/api/1.0.0/location/${`${locationId}`}/review/${`${reviewId}`}/photo/?timestamp=${Date.now()}` }}
               />
             </TouchableHighlight>
-            <Text style={styles.reviewHeader}>
+            <Text style={styles.title}>
               {locationName}
               {', '}
               {' '}
@@ -278,7 +248,7 @@ class UpdateReviewScreen extends Component {
             </Text>
           </View>
           <View style={{ flexDirection: 'row', padding: 20 }}>
-            <Text style={styles.reviewText}>
+            <Text style={updateReviewStyles.reviewText}>
               Overall:
               {' '}
             </Text>
@@ -287,12 +257,11 @@ class UpdateReviewScreen extends Component {
               defaultRating={overallRating}
               size={15}
               showRating={false}
-              style={styles.starRating}
               onFinishRating={(overallRating) => this.setState({ overallRating })}
             />
           </View>
           <View style={{ flexDirection: 'row', padding: 20 }}>
-            <Text style={styles.reviewText}>
+            <Text style={updateReviewStyles.reviewText}>
               Quality:
               {' '}
             </Text>
@@ -301,14 +270,13 @@ class UpdateReviewScreen extends Component {
               count={5}
               defaultRating={qualityRating}
               size={15}
-              style={styles.starRating}
               showRating={false}
               onFinishRating={(qualityRating) => this.setState({ qualityRating })}
             />
 
           </View>
           <View style={{ flexDirection: 'row', padding: 20 }}>
-            <Text style={styles.reviewText}>
+            <Text style={updateReviewStyles.reviewText}>
               Price:
               {' '}
             </Text>
@@ -317,12 +285,11 @@ class UpdateReviewScreen extends Component {
               defaultRating={priceRating}
               size={15}
               showRating={false}
-              style={styles.starRating}
               onFinishRating={(priceRating) => this.setState({ priceRating })}
             />
           </View>
           <View style={{ flexDirection: 'row', padding: 20 }}>
-            <Text style={styles.reviewText}>
+            <Text style={updateReviewStyles.reviewText}>
               Hygeine:
               {' '}
             </Text>
@@ -331,25 +298,25 @@ class UpdateReviewScreen extends Component {
               defaultRating={clenlinessRating}
               size={15}
               showRating={false}
-              style={styles.starRating}
               onFinishRating={(clenlinessRating) => this.setState({ clenlinessRating })}
             />
 
           </View>
           <TextInput
-            style={styles.reviewTextInput}
+            style={updateReviewStyles.reviewTextInput}
             multiline
-            numberOfLines={5}
             blurOnSubmit
+            placeholder="Add a comment"
+            placeholderTextColor="grey"
             onChangeText={(reviewBody) => this.setState({ reviewBody })}
           >
             {reviewBody}
           </TextInput>
           <TouchableOpacity
-            style={styles.updateButton}
+            style={styles.greenButton}
             onPress={() => this.updateReview()}
           >
-            <Text style={styles.formTouchText}>update</Text>
+            <Text style={styles.greenButtonText}>update</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

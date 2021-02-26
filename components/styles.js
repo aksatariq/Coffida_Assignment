@@ -13,16 +13,36 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
   },
+  titleNoAlignment: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: 20,
+  },
   greyText: {
     fontSize: 15,
     color: 'grey',
     paddingBottom: 10,
+    width: 130,
+    lineHeight: 30,
   },
   greyInputText: {
     borderRadius: 3,
     color: 'grey',
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
+  },
+  greyInputTextNoBorder: {
+    fontSize: 15,
+    color: 'grey',
+    paddingBottom: 15,
+  },
+  whiteBoldText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    paddingLeft: 10,
+    lineHeight: 25,
   },
   greenButton: {
     borderRadius: 3,
@@ -38,6 +58,16 @@ export default StyleSheet.create({
     textAlign: 'center',
     height: 35,
     paddingTop: 6,
+  },
+  reviewInfo: {
+    fontSize: 15,
+    color: 'grey',
+    flexShrink: 1,
+    lineHeight: 30,
+    paddingLeft: 10,
+    paddingTop: 6,
+    width: 70,
+
   },
   subTitle: {
     color: 'grey',

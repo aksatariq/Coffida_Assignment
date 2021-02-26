@@ -10,28 +10,10 @@ import RNPickerSelect from 'react-native-picker-select';
 import { AirbnbRating } from 'react-native-ratings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PropTypes from 'prop-types';
+import styles from './styles';
 
-const styles = StyleSheet.create({
+const searchStyles = StyleSheet.create({
 
-  mainBg: {
-    backgroundColor: '#001624',
-    flex: 1,
-  },
-
-  buttonStyle: {
-    borderRadius: 3,
-    backgroundColor: '#00ffea',
-    width: 100,
-    color: 'white',
-    margin: 18,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    height: 30,
-    paddingTop: 5,
-  },
   sortFilters: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -42,12 +24,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
     backgroundColor: '#001624',
-  },
-  formText: {
-    fontSize: 16,
-    color: 'white',
-    flexShrink: 1,
-    lineHeight: 27,
   },
   filterText: {
     fontSize: 13,
@@ -65,23 +41,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  reviewHeader: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    color: 'white',
-    paddingLeft: 10,
-
-  },
-  reviewInfo: {
-    fontSize: 15,
-    color: 'grey',
-    flexShrink: 1,
-    lineHeight: 30,
-    paddingLeft: 10,
-    paddingTop: 6,
-    width: 70,
-
-  },
   row: {
     flex: 1,
     paddingVertical: 25,
@@ -89,14 +48,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
 
-  },
-  flatListTitle: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: 'white',
-    flexShrink: 1,
-    fontWeight: 'bold',
-    marginBottom: 35,
   },
   inputAndroid: {
     fontSize: 16,
@@ -108,8 +59,7 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
-  likeIcon: {
-
+  favIcon: {
     color: '#00ffea',
     width: 50,
     height: 50,
@@ -308,9 +258,9 @@ class SearchScreen extends Component {
       />
 
       <Animated.ScrollView horizontal scrollEventThrottle={1} style={{ height: 50 }}>
-        <View style={styles.sortView}>
+        <View style={searchStyles.sortView}>
           <TextInput
-            style={styles.filterText}
+            style={searchStyles.filterText}
             placeholder="Overall"
             placeholderTextColor="white"
                 // eslint-disable-next-line camelcase
@@ -319,7 +269,7 @@ class SearchScreen extends Component {
             }, this.updateSearch)}
           />
           <TextInput
-            style={styles.filterText}
+            style={searchStyles.filterText}
             placeholder="Price"
             placeholderTextColor="white"
             onChangeText={(priceRating) => this.setState({
@@ -327,7 +277,7 @@ class SearchScreen extends Component {
             }, this.updateSearch)}
           />
           <TextInput
-            style={styles.filterText}
+            style={searchStyles.filterText}
             placeholder="Hygeine"
             placeholderTextColor="white"
             onChangeText={(cleanlinessRating) => this.setState({
@@ -335,7 +285,7 @@ class SearchScreen extends Component {
             }, this.updateSearch)}
           />
           <TextInput
-            style={styles.filterText}
+            style={searchStyles.filterText}
             placeholder="Quality"
             placeholderTextColor="white"
             onChangeText={(qualityRating) => this.setState({
@@ -374,10 +324,10 @@ class SearchScreen extends Component {
   renderFooter = () => (
     <View>
       <TouchableOpacity
-        style={styles.buttonStyle}
+        style={styles.greenButton}
         onPress={() => this.showMoreData()}
       >
-        <Text style={styles.buttonText}>SHOW MORE</Text>
+        <Text style={styles.greenButtonText}>SHOW MORE</Text>
       </TouchableOpacity>
     </View>
   )
@@ -405,17 +355,17 @@ class SearchScreen extends Component {
           keyExtractor={(item) => item.location_id.toString()}
           renderItem={({ item }) => (
             <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
-              <View style={styles.rowFront}>
+              <View style={searchStyles.rowFront}>
                 {
                     this.checkIfFavourite(item.location_id)
                   }
-                <View style={styles.row}>
+                <View style={searchStyles.row}>
                   <Image
                     style={{ width: 66, height: 77 }}
                     source={{ uri: item.photo_path }}
                   />
                   <View style={{ flex: 1, flexDirection: 'column' }}>
-                    <Text style={styles.reviewHeader}>
+                    <Text style={styles.whiteBoldText}>
                       {item.location_name}
                       {', '}
                       {' '}
@@ -453,7 +403,7 @@ class SearchScreen extends Component {
                           >
                             <MaterialCommunityIcons
                               name="heart-off"
-                              style={styles.likeIcon}
+                              style={searchStyles.favIcon}
                               color="#00ffea"
                               size={19}
                             />
@@ -477,7 +427,7 @@ class SearchScreen extends Component {
                           >
                             <MaterialCommunityIcons
                               name="heart-plus"
-                              style={styles.likeIcon}
+                              style={searchStyles.favIcon}
                               color="#00ffea"
                               size={19}
                             />
