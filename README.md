@@ -8,10 +8,15 @@ Style guide: Airbnb
 All the endpoints required for the assingment have been completed and appropiate error handling has been done.
 
 User Management
+
 •	Add new user
+
 •	Login to account
+
 •	Get user information
+
 •	Logout of account
+
 •	Update user information
 
 Location Management
