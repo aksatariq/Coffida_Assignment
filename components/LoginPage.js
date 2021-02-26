@@ -135,6 +135,9 @@ class LoginScreen extends Component {
 
           <View style={styles.formItem}>
             <TouchableOpacity
+              accessible
+              accessibilityLabel="Sign in!"
+              accessibilityHint="You will be taken to the home screen, given that the user login details are correct"
               style={styles.formTouch}
               onPress={() => this.login()}
             >

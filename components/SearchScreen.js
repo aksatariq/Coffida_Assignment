@@ -87,9 +87,9 @@ class SearchScreen extends Component {
       qualityRating: '',
       cleanlinessRating: '',
       searchIn: '',
-      limit: 4,
+      limit: 2,
       showFavourite: true,
-      offset: 4,
+      offset: 2,
     };
   }
 
@@ -104,23 +104,23 @@ class SearchScreen extends Component {
     this.unsubscribe();
   }
 
-    checkLoggedin = async () => {
-      this.getUserData();
-      const tokenId = await AsyncStorage.getItem('@session_token');
+  checkLoggedin = async () => {
+    const tokenId = await AsyncStorage.getItem('@session_token');
+    this.getUserData();
 
-      // check if token exists
-      if (tokenId != null) {
-        // store the token
-        this.setState({ token: tokenId });
-        this.setState({ limit: 4 });
-        this.setState({ offset: 4 });
-        const userId = await AsyncStorage.getItem('@user_id');
-        this.setState({ userId });
+    // check if token exists
+    if (tokenId != null) {
+      // store the token
+      this.setState({ token: tokenId });
+      this.setState({ limit: 2 });
+      this.setState({ offset: 2 });
+      const userId = await AsyncStorage.getItem('@user_id');
+      this.setState({ userId });
 
-        // call to display all locations
-        this.updateSearch('');
-      }
+      // call to display all locations
+      this.updateSearch('');
     }
+  }
 
   updateSearch = (text) => {
     const {
@@ -243,6 +243,9 @@ class SearchScreen extends Component {
   renderHeader = () => (
     <View>
       <SearchBar
+        accessible
+        accessibilityLabel="search bar!"
+        accessibilityHint="Entering a value will filter the locations based on the search value!"
         round
         inputContainerStyle={{ backgroundColor: '#001624' }}
         containerStyle={{ backgroundColor: '#001624' }}
@@ -257,7 +260,7 @@ class SearchScreen extends Component {
         value={this.state.searchValue}
       />
 
-      <Animated.ScrollView horizontal scrollEventThrottle={1} style={{ height: 50 }}>
+      <Animated.ScrollView accesible horizontal scrollEventThrottle={1} style={{ height: 50 }}>
         <View style={searchStyles.sortView}>
           <TextInput
             style={searchStyles.filterText}
@@ -278,6 +281,7 @@ class SearchScreen extends Component {
           />
           <TextInput
             style={searchStyles.filterText}
+            accessible
             placeholder="Hygeine"
             placeholderTextColor="white"
             onChangeText={(cleanlinessRating) => this.setState({
@@ -324,6 +328,9 @@ class SearchScreen extends Component {
   renderFooter = () => (
     <View>
       <TouchableOpacity
+        accessible
+        accessibilityLabel="show more!"
+        accessibilityHint="Clicking on this button will load more locations!"
         style={styles.greenButton}
         onPress={() => this.showMoreData()}
       >
@@ -354,7 +361,12 @@ class SearchScreen extends Component {
           )}
           keyExtractor={(item) => item.location_id.toString()}
           renderItem={({ item }) => (
-            <TouchableWithoutFeedback onPress={() => this.locationDetails({ item })}>
+            <TouchableWithoutFeedback
+              accessible
+              accessibilityLabel="location view"
+              accessibilityHint="Clicking on this view will load the location details!"
+              onPress={() => this.locationDetails({ item })}
+            >
               <View style={searchStyles.rowFront}>
                 {
                     this.checkIfFavourite(item.location_id)
@@ -388,6 +400,9 @@ class SearchScreen extends Component {
                       <View>
                         {showFavourite && (
                           <TouchableOpacity
+                            accessible
+                            accessibilityLabel="Remove from favourites!"
+                            accessibilityHint="Clicking on this button will remove this location from your favourites!"
                             style={{
                               alignSelf: 'center',
                               borderRadius: 5,
@@ -412,6 +427,9 @@ class SearchScreen extends Component {
                         )}
                         {!showFavourite && (
                           <TouchableOpacity
+                            accessible
+                            accessibilityLabel="Add to favourites!"
+                            accessibilityHint="Clicking on this button will add this location to your favourites!"
                             style={{
                               alignSelf: 'center',
                               borderRadius: 5,

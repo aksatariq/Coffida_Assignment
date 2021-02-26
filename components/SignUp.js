@@ -158,6 +158,9 @@ class SignUp extends Component {
             <Text style={styles.formLabel}>First Name:</Text>
             <TextInput
               style={styles.formInput}
+              accessible
+              accessibilityLabel="Enter first name!"
+              accessibilityHint="Click on this box to enter your first name!"
               onChangeText={(firstName) => this.setState({ firstName })}
               value={firstName}
             />
@@ -166,6 +169,9 @@ class SignUp extends Component {
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Last Name:</Text>
             <TextInput
+              accessible
+              accessibilityLabel="Enter last name!"
+              accessibilityHint="Click on this box to enter your last name!"
               style={styles.formInput}
               onChangeText={(lastName) => this.setState({ lastName })}
               value={lastName}
@@ -176,6 +182,9 @@ class SignUp extends Component {
             <Text style={styles.formLabel}>Email:</Text>
             <TextInput
               style={styles.formInput}
+              accessible
+              accessibilityLabel="Enter email!"
+              accessibilityHint="Click on this box to enter your email!"
               onChangeText={(email) => this.setState({ email })}
               value={email}
             />
@@ -184,6 +193,9 @@ class SignUp extends Component {
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Password:</Text>
             <TextInput
+              accessible
+              accessibilityLabel="Enter Password!"
+              accessibilityHint="Click on this box to enter your password!"
               style={styles.formInput}
               secureTextEntry
               onChangeText={(password) => this.setState({ password })}
@@ -194,6 +206,9 @@ class SignUp extends Component {
           <View style={styles.formItem}>
             <TouchableOpacity
               style={styles.formTouch}
+              accessible
+              accessibilityLabel="Sign up!"
+              accessibilityHint="Clicking on this button will take you to the login screen, if the account creation was successful!"
               onPress={() => this.signUp()}
             >
               <Text style={styles.formTouchText}>sign up</Text>

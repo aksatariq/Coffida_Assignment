@@ -27,6 +27,9 @@ class HomeScreen extends Component {
             <TouchableOpacity
               style={homeScreenStyle.greenButton}
               onPress={() => navigation.navigate('signup')}
+              accessible
+              accessibilityLabel="sign up!"
+              accessibilityHint="When you tap this button, you will be taken to the sign up screen where you will be able to create an account!"
             >
               <Text style={homeScreenStyle.buttonText}>SIGN UP</Text>
             </TouchableOpacity>
@@ -34,6 +37,9 @@ class HomeScreen extends Component {
 
           <View style={homeScreenStyle.buttonView2}>
             <TouchableOpacity
+              accessible
+              accessibilityLabel="Login!"
+              accessibilityHint="When you tap this button, you will be taken to the login screen to enter your email and password!"
               style={homeScreenStyle.buttonNoBg}
               onPress={() => navigation.navigate('login')}
             >
