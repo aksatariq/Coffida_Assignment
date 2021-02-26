@@ -7,7 +7,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 import styles from '../Styles/styles';
-import { checkAllFields } from './Utils';
+import { checkAllFields } from '../Utilities/Utils';
 
 class SettingsScreen extends Component {
   constructor(props) {

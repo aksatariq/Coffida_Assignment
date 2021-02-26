@@ -1,30 +1,40 @@
-# Coffida Application #
+# CoffiDa Mobile Application
 
-## GitHub repo:https://github.com/aksatariq/Coffida_Assignment  ##
-## Style Guide: Airbnb
+Link to GitHub repo for submission: <https://github.com/aksatariq/Coffida_Assignment> (for submission purposes only)
+Style guide: Airbnb
 
+## CoffiDa Endpoints
 
-Endpoints implemented, with appropiate error handling.
+All the endpoints required for the assingment have been completed and appropiate error handling has been done.
 
-User Management:
-Sign Up - POST /user
-Login - POST /user/login
-Logout - POST /user/logout
-View user details - GET /user/{usr_id}
-Update user details - PATCH /user/{usr_id}
+User Management
+•	Add new user
+•	Login to account
+•	Get user information
+•	Logout of account
+•	Update user information
 
-Location Reviews:
-Add Review - POST /location/{loc_id}/review 
-Update Review - PATCH /location/{loc_id}/review/{rev_id}
-Delete Review - DELETE /location/{loc_id}/review/{rev_id}
-Get Photo - GET /location/{loc_id}/review/{rev_id}/photo 
-Add Photo - POST /location/{loc_id}/review/{rev_id}/photo
-Delete Photo - DELETE /location/{loc_id}/review/{rev_id}/photo
-Like Review - POST /location/{loc_id}/review/{rev_id}/like 
-Unlike Review -DELETE /location/{loc_id}/review/{rev_id}/like
+Location Management
+•	Find location
+•	Favourite a location
+•	Remove from favourites
+•	Get location information
+•	Add new review
+•	Like Review
+•	Remove like from review 
 
-Location Management:
-Get location details - GET /location/{loc_id} 
-Add to favourite location - POST /location/{loc_id}/favourite
-Remove from favourite - DELETE /location/{loc_id}/favourite
-Find locations - GET /find - Find Locations
+Location Reviews
+•	Get a photo for reviews
+•	Add photo for review
+•	Delete review
+•	Update review
+•	Delete photo from review
+
+## Extension tasks
+
+A profanity filter has been created which clears out the words: tea and cakes.
+Google maps has been implemented and the user has the ability search for coffee spots near the searched location.
+
+## Extra Features
+
+Talkback has been implemented to allow the app to be accessible for all kind of users.
